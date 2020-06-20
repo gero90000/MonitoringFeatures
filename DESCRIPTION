@@ -1,0 +1,7 @@
+Package: MonitoringFeature
+Title: Monitoring Features Generation
+Description: Dynamically generated Monitoring Features based on pre-solving EAX+Restart runs (5 seconds) 
+Version: 0.0.1
+License: todo
+Author: Bjoern Breilmann <bjoernbreilmann@uni-muenster.de>
+Maintainer: Bjoern Breilmann <bjoernbreilmann@web.de>

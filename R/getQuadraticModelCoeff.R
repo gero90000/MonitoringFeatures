@@ -1,0 +1,53 @@
+
+# @author:Bjoern
+# @Feature_8: "QUADRATIC MODEL FIT"
+# @description: 
+#   Fit quadratic model to (ti, fi), 
+#   i = 1,... , n. Have a look at model coefficients etc.
+
+getQuadraticModelCoeff = function(solver_traj, plot = FALSE){
+  resls = list()
+  p = NA
+
+  model_linear = lm(solver_traj$average.fitness ~ solver_traj$iter)
+  summ_coeff_linear = summary(model_linear)
+  model_poly = tryCatch(
+    {
+      lm(solver_traj$average.fitness ~ poly(solver_traj$iter, 2))
+    },
+    error=function(cond) {
+      message(cond)
+      return(NA)
+    })
+  summ_coeff_poly = tryCatch(
+    { 
+      summary(model_poly)
+    },
+    error=function(cond) {
+      message(cond)
+      return(NA)
+    })
+  if(isTRUE(plot)){
+    p = tryCatch(
+    {
+      ggplot(solver_traj, aes(iter, incumbant)) + 
+        geom_point(mapping=aes(x=iter, y=incumbant), color = "black") +
+        geom_smooth(method='lm', formula = y~poly(x, 2), color = "tomato")
+    },
+    error=function(cond) {
+      message(cond)
+      return(NA)
+    })
+  }
+  resls = list.append(resls,
+                      summ_coeff_linear = summ_coeff_linear,
+                      summ_coeff_poly = summ_coeff_poly,
+                      plot = p)
+  return(resls)
+}
+
+
+
+
+
+
