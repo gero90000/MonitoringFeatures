@@ -4,7 +4,6 @@
 #   Number/ratio of knees 
 #   (here a knee is a point on the curve where the slope before is big and low after)
 
-
 # old: get_knee_ratio
 getKneeRatio = function(solver_traj, VG_stats, plat_start_stats){
   resls = list()
@@ -50,8 +49,8 @@ getKneeRatio = function(solver_traj, VG_stats, plat_start_stats){
 
         j = start
         while(j <= end){
-          if(res_eax_traj_CACHE[j + 1, "Knee_start_end"] == "End"){ # +1 needed since now indexing
-            knee_counter = knee_counter + 1
+          if(res_eax_traj_CACHE[j + 1L, "Knee_start_end"] == "End"){ # +1 needed since now indexing
+            knee_counter = knee_counter + 1L
             knee_ls[[i]] = start
             stop = TRUE
             if(stop == T){
@@ -100,7 +99,6 @@ makeKnee_plot = function(solver_traj, knee_stats){
       ggtitle("AVG fitness vs. Incumbent")
  }
 }
-
 
 
 
