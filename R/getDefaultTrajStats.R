@@ -37,12 +37,13 @@ getDefaultStats = function(solvertraj, solvertraj_copy = "", eff_real_stat = FAL
   #(incumbent_diff_stat_ls$Mean_incumbent_diff- avgFit_diff_stat_ls$Mean_avgFit_diff) %>% abs(.)
   resls = list.append(resls,
                       effective_runtime = effective_runtime,
-                      time_diff_stat_ls = time_diff_stat_ls,
                       effective_iterations = effective_iter,
                       time_per_iter_AVG= avg_iter_duration,
+                      TODO_biggest_drop_span_ratio = biggest_drop_span_ratio, #TODO: potentially being the VG theshold stat
+
+                      time_diff_stat_ls = time_diff_stat_ls,
                       incumbent_stat_ls = incumbent_stat_ls,
                       incumbent_diff_stat_ls = incumbent_diff_stat_ls,
-                      TODO_biggest_drop_span_ratio = biggest_drop_span_ratio, #TODO: potentially being the VG theshold stat
                       avgFit_stat_ls = avgFit_stat_ls,
                       avgFit_diff_stat_ls = avgFit_diff_stat_ls
                       )
@@ -63,6 +64,7 @@ getDefaultStats = function(solvertraj, solvertraj_copy = "", eff_real_stat = FAL
 
     # partion of incumbent fitness between effective and real run
     incumbent_stat_ls_copy = makeStats("incumbent_copy", solvertraj_copy$incumbant)
+    incumbent_diff_stat_ls_copy = makeStats("incumbent_diff", diff(solvertraj_copy$incumbant))
     Incumbent_Eff_real_ratio = (incumbent_stat_ls$Num_incumbent * incumbent_stat_ls$Mean_incumbent) / 
                                (incumbent_stat_ls_copy$Num_incumbent_copy * incumbent_stat_ls_copy$Mean_incumbent_copy)
 
@@ -71,17 +73,26 @@ getDefaultStats = function(solvertraj, solvertraj_copy = "", eff_real_stat = FAL
 
     # portion of avg fitness between effective and real run
     avgFit_stat_ls_copy = makeStats("avgFit_copy", solvertraj_copy$average.fitness)
+    avgFit_diff_stat_ls_copy = makeStats("avgFit_diff", diff(solvertraj_copy$average.fitness))
     AVGfit_Eff_real_ratio = (avgFit_stat_ls$Num_avgFit * avgFit_stat_ls$Mean_avgFit) / 
                             (avgFit_stat_ls_copy$Num_avgFit_copy * avgFit_stat_ls_copy$Mean_avgFit_copy)
     
     resls = list.append(resls,
-                        real_iter = real_iterations,
+                        real_iterations = real_iter,
                         real_runtime = real_runtime, 
                         eff_real_iter_ratio = effective_partion_iter,
                         eff_real_time_ratio = eff_real_time_ratio,
+
                         incumbent_eff_real_ratio = Incumbent_Eff_real_ratio,
-                        AVG.fit_eff_real_ratio = AVGfit_Eff_real_ratio) 
-  
+                        avgFit_eff_real_ratio = AVGfit_Eff_real_ratio,
+
+                        incumbent_stat_ls_real = incumbent_stat_ls_copy,
+                        incumbent_diff_stat_ls_real = incumbent_diff_stat_ls_copy, 
+                        avgFit_stat_ls_real = avgFit_stat_ls_copy,
+                        avgFit_diff_stat_ls_real = avgFit_diff_stat_ls_copy
+                        )
+                        
+                        
   } else {
     #message("Either eff_real_stat is not set to TRUE or solver_trajectory_copy object has not been passed.")
   }

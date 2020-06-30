@@ -50,36 +50,40 @@ getAreaAVGInc = function(solver_traj, growth){
 
 
 getConvSpeed_1 = function(solver_traj, timebased){
-  mean_iter_Conv = 0L
+  convIter = 0L
+  convTime = 0L
   area_improvement_iter = 0L
-  mean_time_Conv = 0L
+  area_improvement_time = 0L
+
   resls = list()
 
   if(attr(solver_traj,'area_INC_AVG') == T){
     n = length(solver_traj$iter)
     firstAreaVal = solver_traj[2, "area_between_AVGfit_Inc_iter"]
     lastAreaVal = solver_traj[n, "area_between_AVGfit_Inc_iter"]
-    convSpeed_mean_iter = ((lastAreaVal / firstAreaVal) / n) #* 100
-    convSpeed_mean = 1 - (lastAreaVal / firstAreaVal)
+    convIter = ((lastAreaVal / firstAreaVal) / n) #* 100
+    area_improvement_iter = 1 - (lastAreaVal / firstAreaVal)
 
     if(timebased == TRUE){
       firstAreaVal = solver_traj[2, "area_between_AVGfit_Inc"]
       lastAreaVal = solver_traj[n, "area_between_AVGfit_Inc"]
-      convSpeed_mean_time = ((lastAreaVal / firstAreaVal) /n) #* 100
+      convTime = ((lastAreaVal / firstAreaVal) / n) #* 100
+      area_improvement_time = 1 - (lastAreaVal / firstAreaVal)
     } else {
-      convSpeed_mean_time = NA
+      convTime = NA
     }
     resls= list.append(resls, 
-                       mean_iter_Conv = convSpeed_mean_iter,
-                       area_improvement_iter = convSpeed_mean,
-                       mean_time_Conv = convSpeed_mean_time)
-    
+                       convIter = convIter,
+                       convTime = convTime,
+                       area_improvement_iter = area_improvement_iter,
+                       area_improvement_time = area_improvement_time)
   } else {
     cat("WARNING: \n No ConvSpeed_1 data since no Area between Incumnbent and AVG fitness of poulation")
     resls= list.append(resls, 
-                       mean_iter_Conv = mean_iter_Conv,
+                       convIter = convIter,
+                       convTime = convTime,
                        area_improvement_iter = area_improvement_iter,
-                       mean_time_Conv = mean_time_Conv)
+                       area_improvement_time = area_improvement_time)
   }
   return(resls)
 }
