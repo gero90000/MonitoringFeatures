@@ -87,7 +87,7 @@ getConvSpeed_1 = function(solver_traj, timebased){
                        convIter = convIter,
                        convTime = convTime,
 
-                       area_improvement_iter = area_improvement_iter,
+                       area_improvement_iter = area_improvement_iter,  # TODO change name to relative not area as total
                        area_improvement_time = area_improvement_time,
 
                        rect_stats_iter = rect_stats_iter,
