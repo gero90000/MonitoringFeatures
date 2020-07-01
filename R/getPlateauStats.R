@@ -25,7 +25,7 @@ getSuccessRatio = function(solver_traj){
   if(attr(solver_traj,'plateaunized') == T){
     num_NoSuccess = getPlateauLength(solver_traj)
   } else {
-    cat("WARNING: \n since no plateaus found there cannot be unsuccesful iterations.")
+    message("WARNING: \n since no plateaus found there cannot be unsuccesful iterations.")
     num_NoSuccess = 0L
   }
   if(num_NoSuccess == 0){
@@ -68,7 +68,7 @@ getPlateauStats = function(solver_traj, successRatio){
  
     #plat_stats = list.append(plat_stats, num_NoSuccess = num_NoSuccess)
   } else {
-    cat("WARNING: since no plateaus existent, no plateau statistics computable")
+    message("WARNING: since no plateaus existent, no plateau statistics computable")
     stat_flag = F
     tmpDF = list()
   }
@@ -97,10 +97,30 @@ getPlateauStartStats = function(solver_traj, interval, successRatio){
     plats = tmp[which(tmp$V1 > 1),]
     plats_positions = solver_traj[which(solver_traj$incumbant %in% 
                                           plats$incumbant), c("iter", "incumbant")]
+
+    plats$abs_X = NA 
+    plats$abs_Y = plats$incumbant
+    for(i in plats$incumbant){
+      tmp_pos_batch = plats_positions[which(i == plats_positions$incumbant), ]
+      plats[which(plats$incumbant == i), "abs_X"] = min(tmp_pos_batch$iter)
+    }
+
+    plats$rel_X = NA 
+    plats$rel_Y = NA 
+    for(i in 1:length(plats$incumbant)){
+      plats[i, "rel_X"] = plats[i, "abs_X"] / (length(solver_traj$iter) - 1L)
+      plats[i, "rel_Y"] = (solver_traj[1, "incumbant"] - plats[i, "abs_Y"]) / 
+                          (solver_traj[1, "incumbant"] - solver_traj[length(solver_traj$iter), "incumbant"])
+    }
+
+    plat_start_X_abs = makeStats("plat_start_X_abs", plats$abs_X)
+    plat_start_Y_rel = makeStats("plat_start_Y_rel", plats$rel_Y)
+
     x_abs = plats_positions$iter[1]
     y_abs = plats_positions$incumbant[1]
     plats_positions = aggregate(plats_positions$iter, 
                                 list(plats_positions$incumbant), mean) %>% purrr::map_df(., rev)
+
     #plat_boarder_Y = plats_positions[1, 1] %>% as.double(.)
     #plat_boarder_X = plats_positions[1, 2] %>% as.double(.)
     Plats_area_begin_X =  x_abs / (length(solver_traj$iter)-1)
@@ -116,7 +136,12 @@ getPlateauStartStats = function(solver_traj, interval, successRatio){
                              Plats_area_begin_X_abs = x_abs,
                              Plats_area_begin_Y = Plats_area_begin_Y,
                              Plats_area_begin_Y_abs = y_abs,
-                             plats_positions = plats_positions)
+                             plat_start_X_abs_Stats = plat_start_X_abs,
+                             plat_start_Y_rel_Stats = plat_start_Y_rel,
+
+                             plats = plats,
+                             plats_positions = plats_positions
+                             )
     distance = (tmp[nrow(tmp), "incumbant"] - tmp[1, "incumbant"])  %>% as.double(.)
     start = (tmp[1, "incumbant"])  %>% as.double(.)
     interval_points = list()
@@ -158,13 +183,18 @@ getPlateauStartStats = function(solver_traj, interval, successRatio){
       counter = 0
     }
   } else {
-    cat("WARNING: \n since no plateaues existent statistics about plat starts are not available (thus NA).")
+    message("WARNING: \n since no plateaues existent statistics about plat starts are not available (thus NA).")
     plat_start = list.append(plat_start,
                              Plats_area_begin_X = NA,
                              Plats_area_begin_X_abs = NA,
                              Plats_area_begin_Y = NA,
                              Plats_area_begin_Y_abs = NA,
-                             plats_positions = NA)
+                             plat_start_X_abs_Stats = NA,
+                             plat_start_Y_rel_Stats = NA,
+
+                             plats = NA,
+                             plats_positions = NA
+                             )
     interval_points = NA
     interval_contains = NA
     counter_ls = list()
@@ -175,7 +205,8 @@ getPlateauStartStats = function(solver_traj, interval, successRatio){
                       interval_points = interval_points,
                       interval_contains = interval_contains,
                       counter_ls = counter_ls, 
-                      data = tmp) #tmp_rev, # data
+                      data = tmp
+                      ) #tmp_rev, # data
   return(resls)
 }
 

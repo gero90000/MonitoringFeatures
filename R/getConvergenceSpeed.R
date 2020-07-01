@@ -48,42 +48,62 @@ getAreaAVGInc = function(solver_traj, growth){
   return(solver_traj)
 }
 
-
 getConvSpeed_1 = function(solver_traj, timebased){
   convIter = 0L
   convTime = 0L
   area_improvement_iter = 0L
   area_improvement_time = 0L
 
-  resls = list()
+  rect_stats_iter = NA
+  rect_stats_time = NA
 
+  resls = list()
   if(attr(solver_traj,'area_INC_AVG') == T){
     n = length(solver_traj$iter)
     firstAreaVal = solver_traj[2, "area_between_AVGfit_Inc_iter"]
     lastAreaVal = solver_traj[n, "area_between_AVGfit_Inc_iter"]
-    convIter = ((lastAreaVal / firstAreaVal) / n) #* 100
+    convIter = ((lastAreaVal / firstAreaVal) / n) 
     area_improvement_iter = 1 - (lastAreaVal / firstAreaVal)
+
+    name = "rectangle_iter"
+    rect_stat_ls = unlist(solver_traj$area_between_AVGfit_Inc_iter) %>% .[!is.na(.)]
+    rect_stats_iter = makeStats(name, rect_stat_ls, stat_flag = T)
 
     if(timebased == TRUE){
       firstAreaVal = solver_traj[2, "area_between_AVGfit_Inc"]
       lastAreaVal = solver_traj[n, "area_between_AVGfit_Inc"]
-      convTime = ((lastAreaVal / firstAreaVal) / n) #* 100
+      convTime = ((lastAreaVal / firstAreaVal) / n) 
       area_improvement_time = 1 - (lastAreaVal / firstAreaVal)
+
+      name = "rectangle_time"
+      rect_stat_ls = unlist(solver_traj$area_between_AVGfit_Inc_iter) %>% .[!is.na(.)]
+      rect_stats_time = makeStats(name, rect_stat_ls, stat_flag = T)
     } else {
-      convTime = NA
+      name = "rectangle_time"
+      rect_stat_ls = unlist(solver_traj$area_between_AVGfit_Inc_iter) %>% .[!is.na(.)]
+      rect_stats_time = makeStats(name, rect_stat_ls, stat_flag = F)
     }
     resls= list.append(resls, 
                        convIter = convIter,
                        convTime = convTime,
+
                        area_improvement_iter = area_improvement_iter,
-                       area_improvement_time = area_improvement_time)
+                       area_improvement_time = area_improvement_time,
+
+                       rect_stats_iter = rect_stats_iter,
+                       rect_stats_time = rect_stats_time
+                       )
   } else {
-    cat("WARNING: \n No ConvSpeed_1 data since no Area between Incumnbent and AVG fitness of poulation")
+    message("WARNING: \n No ConvSpeed_1 data since no Area between Incumnbent and AVG fitness of poulation")
     resls= list.append(resls, 
                        convIter = convIter,
                        convTime = convTime,
                        area_improvement_iter = area_improvement_iter,
-                       area_improvement_time = area_improvement_time)
+                       area_improvement_time = area_improvement_time,
+
+                       rect_stats_iter = rect_stats_iter,
+                       rect_stats_time = rect_stats_time
+                       )
   }
   return(resls)
 }
@@ -103,7 +123,7 @@ calcTrigonometricAreas = function(solver_traj, triangle, trapezoid){
   if(length(solver_traj$iter) == 1){
     cat("WARNING: \n No Polygons in trajectory due to trajectoy length.")
     #attr(solver_traj,'Trigonometrics') <- FALSE
-    setattr(solver_traj,"trigonometrics",FALSE)
+    setattr(solver_traj,"trigonometrics", FALSE)
     areals = list.append(areals, 
                          triangle = 0L, 
                          tri_peak = 0L, 
@@ -155,7 +175,7 @@ getConvSpeed_2 = function(solver_traj, tri_area, trap_area){
     convergence_idealized_norm = (convergence_idealized - 0.5) / (1-0.5)
     convergence_step_tri = tri_area / sum(solver_traj$area_between_AVGfit_Inc_iter, na.rm = TRUE)
   } else {
-    cat("WARNING: \n No ConvSpeed_2 data since trajectory does not exhibit trigonometrics (due to length).")
+    message("WARNING: \n No ConvSpeed_2 data since trajectory does not exhibit trigonometrics (due to length).")
     convergence_idealized = 0L
     convergence_idealized_norm = 0L
     convergence_step_tri = 0L

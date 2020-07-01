@@ -21,10 +21,10 @@ getIncLB_area = function(solver_traj, lb){
   stat_flag = T
 
   if (attr(res_eax$trajectory, 'plateaunized_called') == F){
-    solver_traj = findPlat(solver_traj)
+    solver_traj = insertPlateaus(solver_traj) #old: findPlat
   }
   if(length(solver_traj$iter) == 1){
-    cat("WARNING: since trajectory length is 1, no INC-LB area computable.")
+    message("WARNING: since trajectory length is 1, no INC-LB area computable.")
     #area_ls = list()
     area_sum = 0L
     stat_flag = F
