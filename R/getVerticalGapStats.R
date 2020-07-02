@@ -52,12 +52,13 @@ getVG_stats = function(solver_traj){
       # "extra stats" (object specific)
       quantiles_gap_impr = quantile(resls_df$improvement)
       # alternative:
-      drops = resls_df$improvement %>% quantile(., probs = seq(0, 1, 0.1))
-      print(drops)
+      drops = resls_df$improvement %>% quantile(., probs = seq(0, 1, 0.05))
+      #print(drops)
       # regular stats
       # identify/mark gaps and put into seperate df (VG)
       #vg_threshold = quantiles_gap_impr[4] # i.e., the 75% quantile 
-      vg_threshold = drops[9L] # i.e., the 75% quantile 
+      vg_threshold = drops[19L] # i.e., the 75% quantile 
+      print(vg_threshold)
       vg_df = resls_df[which(resls_df$improvement >= vg_threshold), ]
       VG_stat_ls = unlist(vg_df)
 
@@ -85,6 +86,8 @@ getVG_stats = function(solver_traj){
 #  Summary statistics of vertical gap(s) starts.
 #  based on the idea that NETGEN has more signficant drops in the beginning (PASCAL) 
 #  find related helpers in helper_monitor_feature.R
+
+# TODO: add real starting position of vertical gap 
 getVGStartStats = function(solver_traj, VG_stats, obs_amnt, increasing){
   resls = list()
   # idea_1:
@@ -147,11 +150,23 @@ getVGStartStats = function(solver_traj, VG_stats, obs_amnt, increasing){
       amnt_ls[i] = amnt_VG_perc
       ratio_ls[i] = improvements_VG_ratio 
     }
+
+    firstVG_X_abs = res_eax_traj_CACHE[which(res_eax_traj_CACHE$improvement == 
+                                       VG_stats$vertical_gaps_data$vg_df[1]), "iter"]
+    lastVG_X_abs = res_eax_traj_CACHE[which(res_eax_traj_CACHE$improvement == 
+                                      VG_stats$vertical_gaps_data$vg_df[length(VG_stats$vertical_gaps_data$vg_df)]), "iter"]
+    firstVG_X_rel = firstVG / length(solver_traj$iter)
+    lastVG_X_rel = lastVG / length(solver_traj$iter)
+
     resls = list.append(resls,
                         ratio_first_perc_ls = ratio_first_perc_ls,
                         amnt_ls = amnt_ls,
-                        ratio_ls = ratio_ls)
-    
+                        ratio_ls = ratio_ls,
+                        firstVG_X_abs = firstVG_X_abs,
+                        lastVG_X_abs = lastVG_X_abs,
+                        firstVG_X_rel = firstVG_X_rel,
+                        lastVG_X_rel = lastVG_X_rel
+                        )
     if(increasing == F){
       resls = rmNullObs(resls)
       perc_name = paste(obs_amnt*10, "%", sep = " ")
@@ -161,7 +176,11 @@ getVGStartStats = function(solver_traj, VG_stats, obs_amnt, increasing){
     resls = list.append(resls,
                         ratio_first_perc_ls = 0L,
                         amnt_ls = 0L,
-                        ratio_ls = 0L)
+                        ratio_ls = 0L,
+                        firstVG_X_abs = 0L,
+                        lastVG_X_abs = 0L,
+                        firstVG_X_rel = 0L,
+                        lastVG_X_rel = 0L)
   }
   return(resls)
 }
@@ -233,14 +252,14 @@ makeVG_plot = function(VGstats, solver_traj){
                      ymax = Inf, alpha = 0.3, fill = "tomato") +
     geom_vline(xintercept = helper$V2, linetype = "solid", color = "grey", alpha = 0.3) +
     geom_vline(xintercept = helper$V2, linetype = "solid", color = "black", alpha = 0.3) +
-    geom_segment(x =  helper[length(helper$V2), "V2"], 
-                 y = solver_traj[helper[length(helper$V2), "V2"], "incumbant"], 
-                 xend = length(solver_traj$iter)-1, 
-                 yend = solver_traj[length(solver_traj$iter), "incumbant"], 
-                 linetype = "solid", color = "red") +
     geom_segment(x = 0 , 
                  y = solver_traj[1, "incumbant"], 
                  xend = helper[length(helper$V2), "V2"], 
-                 yend = solver_traj[helper[length(helper$V2), "V2"], "incumbant"], 
-                 color = "darkgreen", linetype = "solid") 
+                 yend = solver_traj[helper[length(helper$V2), "V2"]+1L, "incumbant"], 
+                 color = "darkgreen", linetype = "solid") +
+    geom_segment(x =  helper[length(helper$V2), "V2"], 
+                 y = solver_traj[helper[length(helper$V2), "V2"]+1L, "incumbant"], 
+                 xend = length(solver_traj$iter)-1, 
+                 yend = solver_traj[length(solver_traj$iter), "incumbant"], 
+                 linetype = "solid", color = "red")    
 }
