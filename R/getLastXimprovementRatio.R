@@ -6,7 +6,8 @@
 #   Ratio of improvement in last x% steps and the total improvement.
 
 # old: last_X_improvement
-getLastXimprovement = function(solver_traj, last_x_percent){
+# TODO: paramterize with "backwards" = T/F and sum up from beginning or end accordingly 
+getLastXimprovement = function(solver_traj, last_x_percent, backwards = TRUE){
   result = list()
   resls = list()
   res = 0L
@@ -25,11 +26,17 @@ getLastXimprovement = function(solver_traj, last_x_percent){
   x = last_x_percent
   index = (length(resls_df$improvement) * (1-x)) %>% round(., 0)
   n = length(resls_df$improvement)
-  if(index == n){
-    last_x_impr = 0L 
+
+  if(backwards == TRUE){
+     if(index == n){
+        last_x_impr = 0L 
+      } else {
+        last_x_impr = resls_df[index:n, "improvement"] %>% sum(.)
+      }
   } else {
-    last_x_impr = resls_df[index:n, "improvement"] %>% sum(.)
+    last_x_impr = resls_df[1:index, "improvement"] %>% sum(.)
   }
+
   last_x_total_ratio = tryCatch(
     {
       last_x_impr / total_impr
@@ -45,6 +52,7 @@ getLastXimprovement = function(solver_traj, last_x_percent){
                        total_impr = total_impr,
                        last_x_impr = last_x_impr,
                        last_x_total_ratio = last_x_total_ratio,
-                       percent_obs = x)
+                       percent_obs = x,
+                       backwards = backwards)
   return(result)
 }

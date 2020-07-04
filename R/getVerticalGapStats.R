@@ -6,6 +6,7 @@
 #  Summary statistics of vertical gap(s).
 
 # old: get_VG_stats
+# TODO: maybe introduce quantile steps (here 0.05 as parameter "quant_by", and vg-threshold setter for drops[] as "quant_vg")
 getVG_stats = function(solver_traj){
   result = list()
   VG_stat_ls = list()
@@ -56,8 +57,8 @@ getVG_stats = function(solver_traj){
       #print(drops)
       # regular stats
       # identify/mark gaps and put into seperate df (VG)
-      #vg_threshold = quantiles_gap_impr[4] # i.e., the 75% quantile 
-      vg_threshold = drops[19L] # i.e., the 75% quantile 
+      #vg_threshold = quantiles_gap_impr[4] 
+      vg_threshold = drops[19L] # i.e., the XX% quantile 
       print(vg_threshold)
       vg_df = resls_df[which(resls_df$improvement >= vg_threshold), ]
       VG_stat_ls = unlist(vg_df)
@@ -79,7 +80,6 @@ getVG_stats = function(solver_traj){
   return(result)
 }
 
-
 # @author: Pascal, Bjoern 
 # @Feature_3.2: "VERTICAL GAPS START"
 # @description: 
@@ -88,7 +88,7 @@ getVG_stats = function(solver_traj){
 #  find related helpers in helper_monitor_feature.R
 
 # TODO: add real starting position of vertical gap 
-getVGStartStats = function(solver_traj, VG_stats, obs_amnt, increasing){
+getVGStartStats = function(solver_traj, VG_stats, interval, increasing){
   resls = list()
   # idea_1:
   # relation of sum_impr_first_10-20% vs overall improvement(span), i.e., 
@@ -102,13 +102,13 @@ getVGStartStats = function(solver_traj, VG_stats, obs_amnt, increasing){
     
     amnt_iter = length(solver_traj$iter) - 1L
     span_incumbent = sum(res_eax_traj_CACHE$improvement)
-    # e.g., obs_amnt = 3 // up to first 30%, i.e., 10%,...,30%
+    # e.g., interval = 3 // up to first 30%, i.e., 10%,...,30%
     if(increasing == T){
       start = 1L
     } else {
-      start = obs_amnt
+      start = interval
     }
-    for(i in start:obs_amnt){
+    for(i in start:interval){
       perc = tryCatch(
         {
           switch(i,
@@ -155,8 +155,8 @@ getVGStartStats = function(solver_traj, VG_stats, obs_amnt, increasing){
                                        VG_stats$vertical_gaps_data$vg_df[1]), "iter"]
     lastVG_X_abs = res_eax_traj_CACHE[which(res_eax_traj_CACHE$improvement == 
                                       VG_stats$vertical_gaps_data$vg_df[length(VG_stats$vertical_gaps_data$vg_df)]), "iter"]
-    firstVG_X_rel = firstVG / length(solver_traj$iter)
-    lastVG_X_rel = lastVG / length(solver_traj$iter)
+    firstVG_X_rel = firstVG_X_abs / length(solver_traj$iter)
+    lastVG_X_rel = lastVG_X_abs / length(solver_traj$iter)
 
     resls = list.append(resls,
                         ratio_first_perc_ls = ratio_first_perc_ls,
@@ -169,10 +169,10 @@ getVGStartStats = function(solver_traj, VG_stats, obs_amnt, increasing){
                         )
     if(increasing == F){
       resls = rmNullObs(resls)
-      perc_name = paste(obs_amnt*10, "%", sep = " ")
+      perc_name = paste(interval*10, "%", sep = " ")
       resls$percentage = perc_name
     } 
-  } else {
+  } else {                                                #TODO: check is 0L or NA the more "approproate" entry?
     resls = list.append(resls,
                         ratio_first_perc_ls = 0L,
                         amnt_ls = 0L,
@@ -185,16 +185,11 @@ getVGStartStats = function(solver_traj, VG_stats, obs_amnt, increasing){
   return(resls)
 }
 
-
-# FIXME: TODO is not clear haha
-# TODO: - fix the ratio --> y2 must be +1 since in iteration 25 we are behind the last gap - not 24
-#       - rather take the slope average in each region (call slopestats for each region here)
 # old: calc_Gap_Power
 getGapPower = function(VGstats, solver_traj){
   resls = list()
   if(attr(solver_traj,'vertical_gaps') == T){
     # helper to get the VG and its position
-    print("I came here")
     helper = VGstats$improvements
     helper = as.data.frame(cbind(helper$improvement, seq(1:length(helper$improvement)))) 
     helper = helper[which(helper$V1 >= VGstats$vg_stats$vg_threshold), ]
@@ -203,14 +198,15 @@ getGapPower = function(VGstats, solver_traj){
     m = length(helper$V2)
     
     #TODO: check if last step is VG then 1
-    slope_gap_area = (solver_traj[helper[m, "V2"], "incumbant"] - solver_traj[1, "incumbant"]) / 
-                     (helper[m, "V2"] - 1)
-    slope_nongap_area = (solver_traj[n, "incumbant"] - solver_traj[helper[m, "V2"], "incumbant"]) / 
-                        ((n-1) - helper[m, "V2"])
-    
+    # fixed: now the correct slope is calculated (was wrong before because of index iteration irritation)
+    slope_gap_area = (solver_traj[helper[m, "V2"]+ 1L, "incumbant"] - solver_traj[1, "incumbant"]) / 
+                     (helper[m, "V2"] - 0)
+    slope_nongap_area = (solver_traj[n, "incumbant"] - solver_traj[helper[m, "V2"] + 1L, "incumbant"]) / 
+                         (n - helper[m, "V2"])
     stat_ellbow_power = slope_gap_area / slope_nongap_area
-    stat_ellbow_power_norm = ((helper[m, "V2"] / length(res_eax$trajectory$iter)) * slope_gap_area) / 
-      ((1 - ((helper[m, "V2"] / length(res_eax$trajectory$iter)))) * slope_nongap_area)    
+
+    stat_ellbow_power_norm = ((helper[m, "V2"]/n) * slope_gap_area) / 
+                             ((1 - (helper[m, "V2"]/n)) * slope_nongap_area) 
   } else {
     message("WARNING: \n since no vertical gaps existent there is no VG area, hence no slope.")
     stat_ellbow_power = 0L
