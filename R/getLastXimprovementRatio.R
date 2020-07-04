@@ -7,13 +7,13 @@
 
 # old: last_X_improvement
 # TODO: paramterize with "backwards" = T/F and sum up from beginning or end accordingly 
-getLastXimprovement = function(solver_traj, last_x_percent, backwards = TRUE){
+getLastXimprovement = function(solver_traj, p_percent_observation=NULL, backwards=TRUE, from_to = FALSE, from=NULL, to=NULL){
   result = list()
   resls = list()
   res = 0L
 
   for(i in 1:length(solver_traj$iter)){
-    if(i == 1){
+    if(i == 1L){
       resls[[i]] = 0L
     } 
     res = solver_traj[i-1, "incumbant"] - solver_traj[i, "incumbant"]
@@ -23,23 +23,43 @@ getLastXimprovement = function(solver_traj, last_x_percent, backwards = TRUE){
   names(resls_df) = "improvement"
   total_impr = sum(resls_df$improvement)
 
-  x = last_x_percent
-  index = (length(resls_df$improvement) * (1-x)) %>% round(., 0)
-  n = length(resls_df$improvement)
-
-  if(backwards == TRUE){
-     if(index == n){
-        last_x_impr = 0L 
-      } else {
-        last_x_impr = resls_df[index:n, "improvement"] %>% sum(.)
+  if(from_to == FALSE){
+    if(!is.null(p_percent_observation)){
+      if(backwards == TRUE){ # in case we want to look at the last p%
+        index = (length(resls_df$improvement) * (1-p_percent_observation)) %>% round(., 0L)
+        n = length(resls_df$improvement)
+        if(index == n){
+          obs_p_impr = 0L 
+        } else {
+          obs_p_impr = resls_df[index:n, "improvement"] %>% sum(.)
+        }
+      } else { # in case we want to look at the first p%
+        index = (length(resls_df$improvement) * p_percent_observation) %>% round(., 0L)
+        obs_p_impr = resls_df[1:index, "improvement"] %>% sum(.)
       }
-  } else {
-    last_x_impr = resls_df[1:index, "improvement"] %>% sum(.)
-  }
+    } else {
+      message("WARNING: p_percent_observation parameter has not been set! --> Return NA")
+      return(NA)
+    }
+  } else { # in case we want to look from p% to q%
+    if(!is.null(from) & !is.null(to)){
+      index_from = (length(resls_df$improvement) * from) %>% round(., 0L)
+      index_to = (length(resls_df$improvement) * to) %>% round(., 0L)
 
-  last_x_total_ratio = tryCatch(
+      if(index_from <= index_to){
+        obs_p_impr = resls_df[index_from:index_to, "improvement"] %>% sum(.)
+      } else {
+          message("WARNING: parameter from must be equal or less than to! --> Return NA")
+          return(NA)
+      }
+    } else{
+        message("WARNING: set from and to parameter! --> Return NA")
+        return(NA)
+    }
+  }
+  p_obs_total_ratio = tryCatch(
     {
-      last_x_impr / total_impr
+      obs_p_impr / total_impr
     },
     error = function(cond) {
       message("last improvements seem to be 0")
@@ -50,9 +70,12 @@ getLastXimprovement = function(solver_traj, last_x_percent, backwards = TRUE){
   )
   result = list.append(result,
                        total_impr = total_impr,
-                       last_x_impr = last_x_impr,
-                       last_x_total_ratio = last_x_total_ratio,
-                       percent_obs = x,
-                       backwards = backwards)
+                       obs_p_impr = obs_p_impr,
+                       p_obs_total_ratio = p_obs_total_ratio,
+                       percent_obs = p_percent_observation,
+                       backwards = backwards,
+                       from_to = from_to, 
+                       from = from, 
+                       to = to)
   return(result)
 }
