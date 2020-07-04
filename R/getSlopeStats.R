@@ -15,7 +15,7 @@ getSlopeStats = function(solver_traj){
 
   stat_flag = T
   if(length(solver_traj$iter) == 1){
-    cat("WARNING: \n no slopes computable since trajectory has length 1.")
+    message("WARNING: \n no slopes computable since trajectory has length 1.")
     stat_flag = F
     resls_INCL_ZERO = list()
     resls_EXCL_ZERO = list()
@@ -70,7 +70,7 @@ getSlopeDirectionStats = function(solver_traj){
   stat_flat = T
 
   if(length(solver_traj$iter) == 1){
-    cat("WARNING: \n no slopes direction stats computable since trajectory has length 1.")
+    message("WARNING: \n no slopes direction stats computable since trajectory has length 1.")
     Num_direction_change = 0L
     stat_flat = F
   } else {
