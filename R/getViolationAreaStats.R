@@ -50,7 +50,7 @@ getVioPlat = function(solver_traj, VG_stats, Plat_start_stats, Plat_stats){
       vio_ratio_PLAT_VG = 0L
     }
   } else {
-    cat("WARNING: \n no violation stats computable since VG or PLATS are missing.")
+    message("WARNING: \n no violation stats computable since VG or PLATS are missing.")
     vio_ratio_PLAT = 0L
     vio_ratio_VG = 0L
     vio_ratio_PLAT_VG = 0L
@@ -66,30 +66,38 @@ getVioPlat = function(solver_traj, VG_stats, Plat_start_stats, Plat_stats){
 }
 
 # make_plateau_vio_plot
-makePlateauVio_plot = function(vio_stats, solver_traj){
+makePlateauVio_plot = function(vio_stats, solver_traj, VGstats){
   helper = vio_stats$vg
   C = vio_stats$plat_pos_avg
-
+  
+  helper2 = VGstats$improvements
+  helper2 = as.data.frame(cbind(helper$improvement, seq(1:length(VGstats$improvements$improvement))))
+  helper2 = helper[which(helper$V1 >= VGstats$vg_stats$vg_threshold), ]
+  
   ggplot(data=solver_traj) +
     geom_step(mapping=aes(x=iter, y=incumbant), color = "black") +
     ggtitle("Incumbent Trajectory") +
+    geom_vline(xintercept = helper2$V2, linetype = "solid", color = "magenta", alpha = 0.99) +
     annotate("rect", xmin = 0 , 
-                     ymin = solver_traj[length(solver_traj$iter), "incumbant"], 
-                     xmax = helper[length(helper$V2), "V2"], 
-                     ymax = Inf, alpha = 0.3, fill = "green") +
+             ymin = solver_traj[length(solver_traj$iter), "incumbant"], 
+             xmax = helper[length(helper$V2), "V2"], 
+             ymax = Inf, alpha = 0.3, fill = "green") +
     annotate("rect", xmin = helper[length(helper$V2), "V2"] , 
-                     ymin = solver_traj[length(solver_traj$iter), "incumbant"], 
-                     xmax = Inf, 
-                     ymax = Inf, alpha = 0.3, fill = "tomato") +
-    geom_segment(x =  helper[length(helper$V2), "V2"], 
-                 y = solver_traj[helper[length(helper$V2), "V2"], "incumbant"], 
-                 xend = length(solver_traj$iter)-1, 
-                 yend = solver_traj[length(solver_traj$iter), "incumbant"], 
-                 linetype = "solid", color = "red") +
-    geom_segment(x = 0 , y = solver_traj[1, "incumbant"], 
-                 xend = helper[length(helper$V2), "V2"], yend = solver_traj[helper[length(helper$V2), "V2"], "incumbant"], 
-                 color = "darkgreen", linetype = "solid") +
+             ymin = solver_traj[length(solver_traj$iter), "incumbant"], 
+             xmax = Inf, 
+             ymax = Inf, alpha = 0.3, fill = "tomato") +
     geom_step(mapping=aes(x=iter, y=incumbant), color = "black") +
-    geom_point(data = C, mapping = aes(x = x, y = Group.1), pch = 10, size = 5, color = "red", alpha = 0.9) +
-    geom_vline(xintercept = vio_stats$VG_boarder_X) 
+    geom_point(data = C, mapping = aes(x = x, y = Group.1), pch = 10, size = 10, color = "magenta", alpha = 0.9) +
+    geom_vline(xintercept = vio_stats$VG_boarder_X) +
+    theme(
+      panel.background = element_rect(fill = "white", colour = "white",
+                                      size = 2, linetype = "solid"),
+      panel.grid.major = element_line(size = 0.5, linetype = 'solid',
+                                      colour = "white"), 
+      panel.grid.minor = element_line(size = 0.15, linetype = 'solid',
+                                      colour = "white")
+    )
 }
+
+
+

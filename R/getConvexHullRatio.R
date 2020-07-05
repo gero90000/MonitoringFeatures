@@ -40,6 +40,6 @@ makeCHULL_plot = function(solver_traj){
   
   plot(X, cex = 0.5)
   lines(X[hpts, ], col = "grey")
-  points(X[hpts, ], bg = "red", col = "black", pch = 13, cex=2, lwd = 2)
-  points(X[-hpts, ], col = "tomato", cex = 0.5, pch = 16)
+  points(X[hpts, ], col = "magenta", pch = 13, cex=2, lwd = 2)
+  points(X[-hpts, ], col = "black", cex = 0.5, pch = 16)
 }
