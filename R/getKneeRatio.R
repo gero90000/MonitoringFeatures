@@ -17,6 +17,7 @@ getKneeRatio = function(solver_traj, VG_stats, plat_start_stats){
     impf_df = VG_stats$improvements %>% DataCombine::InsertRow(., c(0L), 1L)
     res_eax_traj_CACHE = cbind(solver_traj[, c("time.passed", "iter", "incumbant")], impf_df)
     res_eax_traj_CACHE$Knee_start_end = "_"
+    '
     # END fist then START (since START is allowed to override END)
     # 1.1) get all starting points of Plateaus (end of knee)
     res_eax_traj_CACHE[which(res_eax_traj_CACHE$incumbant %in% 
@@ -24,7 +25,23 @@ getKneeRatio = function(solver_traj, VG_stats, plat_start_stats){
     # 1.2) get start of a knee by finding VG points (begin of knee)
     res_eax_traj_CACHE[which(res_eax_traj_CACHE$improvement >= 
                                VG_stats$vg_stats$vg_threshold), "Knee_start_end"] = "Start"
-   
+
+    '
+    #### ALTERNATIVE
+    drops = res_eax_traj_CACHE$improvement %>% quantile(., probs = seq(0, 1, 0.05))
+    #print(drops)
+    # regular stats
+    # identify/mark gaps and put into seperate df (VG)
+    #vg_threshold = quantiles_gap_impr[4] 
+    vg_threshold = drops[18L]  # 85% quantile 
+    lowSlope_threshold = drops[6L] # 25% quantile
+
+    # END fist then START (since START is allowed to override END)
+    # 1.1) get all starting points of Plateaus (end of knee)
+    res_eax_traj_CACHE[which(res_eax_traj_CACHE$improvement <= lowSlope_threshold), "Knee_start_end"] = "End"
+    # 1.2) get start of a knee by finding VG points (begin of knee)
+    res_eax_traj_CACHE[which(res_eax_traj_CACHE$improvement >= vg_threshold), "Knee_start_end"] = "Start"
+
     if(!('%in%'("Start", res_eax_traj_CACHE$Knee_start_end))){
       resls = list.append(resls,
                           knee_ls = knee_ls,
@@ -35,9 +52,28 @@ getKneeRatio = function(solver_traj, VG_stats, plat_start_stats){
       #    {{VG-np-np-np-P},
       #     {VG-np-np-P},
       #     {VG-np-P},
-      #     {VG-P}}
+      #     {VG-P}}                       --> now updated
       knee_start_iter = res_eax_traj_CACHE[which(res_eax_traj_CACHE$Knee_start_end == "Start"), "iter"] 
-      knee_strictness = 3L
+
+      #+++ new +++ prohibit "double/tripple starts"
+      knee_start_ls = c()
+        for(i in 1:length(knee_start_iter)){
+          if(i == length(knee_start_iter)){
+            knee_start_ls = c(knee_start_ls, knee_start_iter[i])
+            break
+          }
+          #print(knee_start_iter[i])
+          if(knee_start_iter[i]+1 == knee_start_iter[i+1]){
+            next
+          } else {
+            knee_start_ls = c(knee_start_ls, knee_start_iter[i])
+          }
+        }
+
+      knee_start_iter = knee_start_ls
+
+
+      knee_strictness = 10L
       for(i in 1:length(knee_start_iter)){
         stop = FALSE
         start = knee_start_iter[i]
@@ -96,7 +132,15 @@ makeKnee_plot = function(solver_traj, knee_stats){
                  pch = 16, size = 2, color = "darkgreen", alpha = 0.9) +
       geom_point(data = knee_points, mapping = aes(x = x, y = y), 
                  pch = 1, size = 10, color = "black", alpha = 0.9) +
-      ggtitle("AVG fitness vs. Incumbent")
+      ggtitle("AVG fitness vs. Incumbent") +
+      theme(
+            panel.background = element_rect(fill = "white", colour = "white",
+                                            size = 2, linetype = "solid"),
+            panel.grid.major = element_line(size = 0.5, linetype = 'solid',
+                                            colour = "white"), 
+            panel.grid.minor = element_line(size = 0.15, linetype = 'solid',
+                                            colour = "grey")
+    )
  }
 }
 

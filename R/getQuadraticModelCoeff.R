@@ -32,7 +32,15 @@ getQuadraticModelCoeff = function(solver_traj, plot = FALSE){
     {
       ggplot(solver_traj, aes(iter, incumbant)) + 
         geom_point(mapping=aes(x=iter, y=incumbant), color = "black") +
-        geom_smooth(method='lm', formula = y~poly(x, 2), color = "tomato")
+        geom_smooth(method='lm', formula = y~poly(x, 2), color = "tomato") +
+        theme(
+          panel.background = element_rect(fill = "white", colour = "white",
+                                          size = 2, linetype = "solid"),
+          panel.grid.major = element_line(size = 0.5, linetype = 'solid',
+                                          colour = "white"), 
+          panel.grid.minor = element_line(size = 0.15, linetype = 'solid',
+                                          colour = "grey")
+        )
     },
     error=function(cond) {
       message(cond)
