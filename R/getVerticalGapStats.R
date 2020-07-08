@@ -51,7 +51,7 @@ getVG_stats = function(solver_traj){
       stat_flag = F
     } else {
       # "extra stats" (object specific)
-      quantiles_gap_impr = quantile(resls_df$improvement)
+      #quantiles_gap_impr = quantile(resls_df$improvement)
       # alternative:
       drops = resls_df$improvement %>% quantile(., probs = seq(0, 1, 0.05))
       #print(drops)
@@ -59,7 +59,7 @@ getVG_stats = function(solver_traj){
       # identify/mark gaps and put into seperate df (VG)
       #vg_threshold = quantiles_gap_impr[4] 
       vg_threshold = drops[19L] # i.e., the XX% quantile 
-      print(vg_threshold)
+      #print(vg_threshold)
       vg_df = resls_df[which(resls_df$improvement >= vg_threshold), ]
       VG_stat_ls = unlist(vg_df)
 
@@ -199,7 +199,7 @@ getGapPower = function(VGstats, solver_traj){
     
     #TODO: check if last step is VG then 1
     # fixed: now the correct slope is calculated (was wrong before because of index iteration irritation)
-    slope_gap_area = (solver_traj[helper[m, "V2"]+ 1L, "incumbant"] - solver_traj[1, "incumbant"]) / 
+    slope_gap_area = (solver_traj[helper[m, "V2"]+ 1L, "incumbant"] - solver_traj[1L, "incumbant"]) / 
                      (helper[m, "V2"] - 0)
     slope_nongap_area = (solver_traj[n, "incumbant"] - solver_traj[helper[m, "V2"] + 1L, "incumbant"]) / 
                          (n - helper[m, "V2"])

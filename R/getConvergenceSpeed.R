@@ -17,8 +17,8 @@ getAreaAVGInc = function(solver_traj, growth){
   dec_plc = 3L
   
   if(length(solver_traj$iter) == 1){
-    cat("WARNING: \n No Areas between Incumnbent and \n 
-         AVG fitness of population computable due to trajectory length.")
+    message("WARNING: \n No Areas between Incumnbent and \n 
+             AVG fitness of population computable due to trajectory length.")
     attr(solver_traj,'area_INC_AVG') <- FALSE
   } else {
     for (i in 2:length(solver_traj$iter)) {
@@ -59,11 +59,11 @@ getConvSpeed_1 = function(solver_traj, timebased){
 
   resls = list()
   if(attr(solver_traj,'area_INC_AVG') == T){
-    n = length(solver_traj$iter)
+    n = length(solver_traj$iter) - 1L
     firstAreaVal = solver_traj[2, "area_between_AVGfit_Inc_iter"]
     lastAreaVal = solver_traj[n, "area_between_AVGfit_Inc_iter"]
     convIter = ((lastAreaVal / firstAreaVal) / n) 
-    area_improvement_iter = 1 - (lastAreaVal / firstAreaVal)
+    area_improvement_iter = 1L - (lastAreaVal / firstAreaVal)
 
     name = "rectangle_iter"
     rect_stat_ls = unlist(solver_traj$area_between_AVGfit_Inc_iter) %>% .[!is.na(.)]

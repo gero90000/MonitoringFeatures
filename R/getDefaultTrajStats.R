@@ -14,8 +14,8 @@
 getDefaultStats = function(solvertraj, solvertraj_copy = "", eff_real_stat = FALSE) {
   resls = list()
 
-  time_diff_stat_ls = makeStats("time_diff", diff(solvertraj$time.passed))
-  effective_iter = length(solvertraj$iter) # -1 ????
+  time_diff_stat_ls = makeStats("time_diff_eff", diff(solvertraj$time.passed))
+  effective_iter = length(solvertraj$iter) - 1L # indexing != iteration
   
   effective_runtime = res_eax$trajectory[effective_iter, "time.passed"]
   avg_iter_duration = effective_runtime / effective_iter
@@ -38,14 +38,14 @@ getDefaultStats = function(solvertraj, solvertraj_copy = "", eff_real_stat = FAL
   resls = list.append(resls,
                       effective_runtime = effective_runtime,
                       effective_iterations = effective_iter,
-                      time_per_iter_AVG= avg_iter_duration,
+                      time_per_iter_AVG_eff = avg_iter_duration,
                       TODO_biggest_drop_span_ratio = biggest_drop_span_ratio, #TODO: potentially being the VG theshold stat
 
-                      time_diff_stat_ls = time_diff_stat_ls,
-                      incumbent_stat_ls = incumbent_stat_ls,
-                      incumbent_diff_stat_ls = incumbent_diff_stat_ls,
-                      avgFit_stat_ls = avgFit_stat_ls,
-                      avgFit_diff_stat_ls = avgFit_diff_stat_ls
+                      time_diff_stat_ls_eff = time_diff_stat_ls,
+                      incumbent_stat_ls_eff = incumbent_stat_ls,
+                      incumbent_diff_stat_ls_eff = incumbent_diff_stat_ls,
+                      avgFit_stat_ls_eff = avgFit_stat_ls,
+                      avgFit_diff_stat_ls_eff = avgFit_diff_stat_ls
                       )
   
   ### Effective vs. Real
@@ -54,10 +54,13 @@ getDefaultStats = function(solvertraj, solvertraj_copy = "", eff_real_stat = FAL
 
     message("deriving default stats considering real and effective solver run relation")
     
+    time_diff_stat_ls_real = makeStats("time_diff_real", diff(solvertraj_copy$time.passed))
     real_iter = length(solvertraj_copy$iter)
     effective_partion_iter = effective_iter / real_iter
 
-    real_runtime = solvertraj_copy[real_iter, "time.passed"] %>% round(., 0)
+    real_runtime = solvertraj_copy[real_iter, "time.passed"] %>% round(., 0L)
+
+    avg_iter_duration_real = real_runtime / real_iter
 
     # partion of effective vs real solver runtime
     eff_real_time_ratio = effective_runtime / real_runtime #5L   or just take the defined cutoff time
@@ -78,18 +81,24 @@ getDefaultStats = function(solvertraj, solvertraj_copy = "", eff_real_stat = FAL
                             (avgFit_stat_ls_copy$Num_avgFit_copy * avgFit_stat_ls_copy$Mean_avgFit_copy)
     
     resls = list.append(resls,
-                        real_iterations = real_iter,
                         real_runtime = real_runtime, 
+                        real_iterations = real_iter,
+                        time_per_iter_AVG_real = avg_iter_duration_real,
+                        #biggestDrop_span = same
+
+                        time_diff_stat_ls_real = time_diff_stat_ls_real,
+                        incumbent_stat_ls_real = incumbent_stat_ls_copy,
+                        incumbent_diff_stat_ls_real = incumbent_diff_stat_ls_copy, 
+                        avgFit_stat_ls_real = avgFit_stat_ls_copy,
+                        avgFit_diff_stat_ls_real = avgFit_diff_stat_ls_copy,
+
+
+                        # proportional KPIs
                         eff_real_iter_ratio = effective_partion_iter,
                         eff_real_time_ratio = eff_real_time_ratio,
 
                         incumbent_eff_real_ratio = Incumbent_Eff_real_ratio,
-                        avgFit_eff_real_ratio = AVGfit_Eff_real_ratio,
-
-                        incumbent_stat_ls_real = incumbent_stat_ls_copy,
-                        incumbent_diff_stat_ls_real = incumbent_diff_stat_ls_copy, 
-                        avgFit_stat_ls_real = avgFit_stat_ls_copy,
-                        avgFit_diff_stat_ls_real = avgFit_diff_stat_ls_copy
+                        avgFit_eff_real_ratio = AVGfit_Eff_real_ratio
                         )
                         
                         

@@ -31,13 +31,13 @@ getSuccessRatio = function(solver_traj){
   if(num_NoSuccess == 0){
     successRatio = 1L
   } else {
-    successRatio = 1 - (num_NoSuccess / length(solver_traj$iter))
+    successRatio = 1.0 - (num_NoSuccess / (length(solver_traj$iter)-1L))
     #init.platFound()
   }
   resls = list.append(resls,
                       successRatio = successRatio,
                       num_NoSuccess = num_NoSuccess,
-                      num_total = length(solver_traj$iter))
+                      num_total = (length(solver_traj$iter))-1L)
   return(resls)
 }
 
