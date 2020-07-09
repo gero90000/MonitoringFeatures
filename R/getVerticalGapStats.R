@@ -153,8 +153,10 @@ getVGStartStats = function(solver_traj, VG_stats, interval, increasing){
 
     firstVG_X_abs = res_eax_traj_CACHE[which(res_eax_traj_CACHE$improvement == 
                                        VG_stats$vertical_gaps_data$vg_df[1]), "iter"]
+    firstVG_X_abs = firstVG_X_abs[length(firstVG_X_abs)] # needed sinc ethere can be duplicates so we take the real first VG
     lastVG_X_abs = res_eax_traj_CACHE[which(res_eax_traj_CACHE$improvement == 
                                       VG_stats$vertical_gaps_data$vg_df[length(VG_stats$vertical_gaps_data$vg_df)]), "iter"]
+    lastVG_X_abs = lastVG_X_abs[length(lastVG_X_abs)] # needed sinc ethere can be duplicates so we take the real last VG
     firstVG_X_rel = firstVG_X_abs / length(solver_traj$iter)
     lastVG_X_rel = lastVG_X_abs / length(solver_traj$iter)
 
