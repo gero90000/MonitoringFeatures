@@ -72,7 +72,6 @@ getKneeRatio = function(solver_traj, VG_stats, plat_start_stats){
 
       knee_start_iter = knee_start_ls
 
-
       knee_strictness = 10L
       for(i in 1:length(knee_start_iter)){
         stop = FALSE

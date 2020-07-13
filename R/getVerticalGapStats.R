@@ -63,7 +63,6 @@ getVG_stats = function(solver_traj){
       vg_df = resls_df[which(resls_df$improvement >= vg_threshold), ]
       VG_stat_ls = unlist(vg_df)
 
-
       setattr(solver_traj, "vertical_gaps", TRUE)
     }
   }
