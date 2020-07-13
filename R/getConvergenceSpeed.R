@@ -22,10 +22,10 @@ getAreaAVGInc = function(solver_traj, growth){
     attr(solver_traj,'area_INC_AVG') <- FALSE
   } else {
     for (i in 2L:length(solver_traj$iter)) {
-        width_t = solver_traj[i, "time.passed"] - solver_traj[i - 1, "time.passed"]
-        width_t_it = solver_traj[i, "iter"] - solver_traj[i - 1, "iter"]
-        height_f = solver_traj[i - 1, "average.fitness"] - solver_traj[i - 1, "incumbant"]
-        height_f_it = solver_traj[i - 1, "average.fitness"] - solver_traj[i - 1, "incumbant"]
+        width_t = solver_traj[i, "time.passed"] - solver_traj[i - 1L, "time.passed"]
+        width_t_it = solver_traj[i, "iter"] - solver_traj[i - 1L, "iter"]
+        height_f = solver_traj[i - 1L, "average.fitness"] - solver_traj[i - 1L, "incumbant"]
+        height_f_it = solver_traj[i - 1L, "average.fitness"] - solver_traj[i - 1L, "incumbant"]
       
         area_ft = width_t * height_f
         area_ft_it = width_t_it * height_f_it
@@ -133,7 +133,7 @@ getConvSpeed_1 = function(solver_traj, timebased){
 calcTrigonometricAreas = function(solver_traj, triangle, trapezoid){
   areals = list()
 
-  if(length(solver_traj$iter) == 1){
+  if(length(solver_traj$iter) == 1L){
     message("WARNING: \n No Polygons in trajectory due to trajectoy length.")
     #attr(solver_traj,'Trigonometrics') <- FALSE
     setattr(solver_traj,"trigonometrics", FALSE)
@@ -149,11 +149,11 @@ calcTrigonometricAreas = function(solver_traj, triangle, trapezoid){
     if(triangle == TRUE){
       tri_peak = solver_traj[n, "incumbant"] + (solver_traj[n, "average.fitness"] - 
                                                   solver_traj[n, "incumbant"]) / 2
-      tri_sideA = solver_traj[1, "average.fitness"] - solver_traj[1, "incumbant"]
-      tri_sideB =  ((n - 1)^2 + (solver_traj[1, "average.fitness"] - 
+      tri_sideA = solver_traj[1L, "average.fitness"] - solver_traj[1L, "incumbant"]
+      tri_sideB =  ((n - 1)^2 + (solver_traj[1L, "average.fitness"] - 
                                    tri_peak)^2) %>% sqrt(.)
-      tri_sideC = if(tri_peak > solver_traj[1, "incumbant"]) {
-        ((n - 1)^2 + (tri_peak - solver_traj[1, "incumbant"])^2) %>% sqrt(.)
+      tri_sideC = if(tri_peak > solver_traj[1L, "incumbant"]) {
+        ((n - 1)^2 + (tri_peak - solver_traj[1L, "incumbant"])^2) %>% sqrt(.)
       } else {
         ((n - 1)^2 + (solver_traj[1, "incumbant"] - tri_peak)^2) %>% sqrt(.)
       }
