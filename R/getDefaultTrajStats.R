@@ -55,7 +55,7 @@ getDefaultStats = function(solvertraj, solvertraj_copy = "", eff_real_stat = FAL
     message("deriving default stats considering real and effective solver run relation")
     
     time_diff_stat_ls_real = makeStats("time_diff_real", diff(solvertraj_copy$time.passed))
-    real_iter = length(solvertraj_copy$iter)
+    real_iter = length(solvertraj_copy$iter) - 1L # indexing != iteration
     effective_partion_iter = effective_iter / real_iter
 
     real_runtime = solvertraj_copy[real_iter, "time.passed"] %>% round(., 0L)
