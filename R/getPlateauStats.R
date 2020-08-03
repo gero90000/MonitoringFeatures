@@ -105,13 +105,37 @@ getPlateauStartStats = function(solver_traj, interval, successRatio){
       plats[which(plats$incumbant == i), "abs_X"] = min(tmp_pos_batch$iter)
     }
 
+
+
     plats$rel_X = NA 
     plats$rel_Y = NA 
+    plats$rel_X_vol = NA
+    plats$rel_Y_vol = NA
+
     for(i in 1:length(plats$incumbant)){
       plats[i, "rel_X"] = plats[i, "abs_X"] / (length(solver_traj$iter) - 1L)
       plats[i, "rel_Y"] = (solver_traj[1, "incumbant"] - plats[i, "abs_Y"]) / 
                           (solver_traj[1, "incumbant"] - solver_traj[length(solver_traj$iter), "incumbant"])
+
+      # volume based (decreasing from 1 in both dimensions)
+      plats[i, "rel_X_vol"] = (1L - plats[i, "rel_X"]) %>% abs(.)
+      #plats[i, "rel_X_vol"] = (1L - (plats[i, "abs_X"] / (length(solver_traj$iter) - 1L))) %>% abs(.)
+      
+      plats[i, "rel_Y_vol"] = (1L - plats[i, "rel_Y"]) %>% abs(.)
+      #plats[i, "rel_Y_vol"] = (plats[i, "abs_Y"] - solver_traj[length(solver_traj$iter), "incumbant"]) /
+      #  (solver_traj[1, "incumbant"] - solver_traj[length(solver_traj$iter), "incumbant"])
     }
+
+    characteristic_volume_data = plats[which(plats$incumbant == max(plats$incumbant)), c("rel_X_vol", "rel_Y_vol") ]
+    characteristic_volume_X = characteristic_volume_data$rel_X_vol[1] %>% as.double(.)
+    characteristic_volume_Y = characteristic_volume_data$rel_Y_vol[1] %>% as.double(.)
+    characteristic_volume = characteristic_volume_X * characteristic_volume_Y
+
+
+
+
+
+
 
     plat_start_X_abs = makeStats("plat_start_X_abs", plats$abs_X)
     plat_start_Y_rel = makeStats("plat_start_Y_rel", plats$rel_Y)
@@ -138,6 +162,9 @@ getPlateauStartStats = function(solver_traj, interval, successRatio){
                              Plats_area_begin_Y_abs = y_abs,
                              plat_start_X_abs_Stats = plat_start_X_abs,
                              plat_start_Y_rel_Stats = plat_start_Y_rel,
+                             characteristic_volume_X = characteristic_volume_X,
+                             characteristic_volume_Y = characteristic_volume_Y,
+                             characteristic_volume = characteristic_volume,
 
                              plats = plats,
                              plats_positions = plats_positions
@@ -191,6 +218,9 @@ getPlateauStartStats = function(solver_traj, interval, successRatio){
                              Plats_area_begin_Y_abs = NA,
                              plat_start_X_abs_Stats = NA,
                              plat_start_Y_rel_Stats = NA,
+                             characteristic_volume_X = NA,
+                             characteristic_volume_Y = NA,
+                             characteristic_volume = NA,
 
                              plats = NA,
                              plats_positions = NA
