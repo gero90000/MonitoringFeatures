@@ -13,6 +13,13 @@
 # getDefaultStats(res_eax$trajectory, res_eax_copy$trajectory, eff_real_stat = TRUE)
 getDefaultStats = function(solvertraj, solvertraj_copy = "", eff_real_stat = FALSE) {
   resls = list()
+  
+  # ++++ new +++
+  if(attr(solvertraj,'plateaunized') == T){
+    plateau_found_effective = 1L
+  } else {
+    plateau_found_effective = 0L
+  }
 
   time_diff_stat_ls = makeStats("time_diff_eff", diff(solvertraj$time.passed))
   effective_iter = length(solvertraj$iter) - 1L # indexing != iteration
@@ -38,6 +45,7 @@ getDefaultStats = function(solvertraj, solvertraj_copy = "", eff_real_stat = FAL
   resls = list.append(resls,
                       effective_runtime = effective_runtime,
                       effective_iterations = effective_iter,
+                      plateau_found_effective = plateau_found_effective,
                       time_per_iter_AVG_eff = avg_iter_duration,
                       TODO_biggest_drop_span_ratio = biggest_drop_span_ratio, #TODO: potentially being the VG theshold stat
 

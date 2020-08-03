@@ -105,8 +105,6 @@ getPlateauStartStats = function(solver_traj, interval, successRatio){
       plats[which(plats$incumbant == i), "abs_X"] = min(tmp_pos_batch$iter)
     }
 
-
-
     plats$rel_X = NA 
     plats$rel_Y = NA 
     plats$rel_X_vol = NA
@@ -130,12 +128,6 @@ getPlateauStartStats = function(solver_traj, interval, successRatio){
     characteristic_volume_X = characteristic_volume_data$rel_X_vol[1] %>% as.double(.)
     characteristic_volume_Y = characteristic_volume_data$rel_Y_vol[1] %>% as.double(.)
     characteristic_volume = characteristic_volume_X * characteristic_volume_Y
-
-
-
-
-
-
 
     plat_start_X_abs = makeStats("plat_start_X_abs", plats$abs_X)
     plat_start_Y_rel = makeStats("plat_start_Y_rel", plats$rel_Y)
