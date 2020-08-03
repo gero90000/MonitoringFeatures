@@ -13,7 +13,7 @@
 # getDefaultStats(res_eax$trajectory, res_eax_copy$trajectory, eff_real_stat = TRUE)
 getDefaultStats = function(solvertraj, solvertraj_copy = "", eff_real_stat = FALSE) {
   resls = list()
-  
+
   # ++++ new +++
   if(attr(solvertraj,'plateaunized') == T){
     plateau_found_effective = 1L
@@ -111,7 +111,7 @@ getDefaultStats = function(solvertraj, solvertraj_copy = "", eff_real_stat = FAL
                         
                         
   } else {
-    #message("Either eff_real_stat is not set to TRUE or solver_trajectory_copy object has not been passed.")
+    message("Either eff_real_stat is not set to TRUE or solver_trajectory_copy object has not been passed.")
   }
   return(resls)
 }
