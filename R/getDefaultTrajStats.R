@@ -108,8 +108,7 @@ getDefaultStats = function(solvertraj, solvertraj_copy = "", eff_real_stat = FAL
                         incumbent_eff_real_ratio = Incumbent_Eff_real_ratio,
                         avgFit_eff_real_ratio = AVGfit_Eff_real_ratio
                         )
-                        
-                        
+                                            
   } else {
     message("Either eff_real_stat is not set to TRUE or solver_trajectory_copy object has not been passed.")
   }
