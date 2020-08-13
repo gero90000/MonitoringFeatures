@@ -115,3 +115,40 @@ getDefaultStats = function(solvertraj, solvertraj_copy = "", eff_real_stat = FAL
   return(resls)
 }
 
+
+# for convenience put as a new function
+time_X_stats = function(solvertraj){
+  resl = list()
+  resls_time = c()
+  for(i in 1:9){
+    perc = switch(i,
+                  0.1,
+                  0.2,
+                  0.3,
+                  0.4,
+                  0.5,
+                  0.6,
+                  0.7,
+                  0.8,
+                  0.9
+    ) 
+    iter_X = (perc *solvertraj[length(solvertraj$iter), "iter"]) %>% base::round(., 0L)
+    time_passed_X = solvertraj[iter_X, "time.passed"]
+    resls_time = c(resls_time, time_passed_X)
+  }
+  resls_time_diff = diff(resls_time)
+  resls_time_diff_stats = MonitoringFeature::makeStats("time_X", resls_time_diff)
+  
+  resl = list.append(resl,
+                     time_passed_iter_X = resls_time,
+                     time_passed_iter__diff = resls_time_diff,
+                     time_passed_iter_X_diff_stats = resls_time_diff_stats
+                     )
+
+}
+
+
+
+
+
+
