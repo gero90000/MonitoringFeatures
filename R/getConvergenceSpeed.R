@@ -64,7 +64,7 @@ getConvSpeed_1 = function(solver_traj, timebased){
 
   resls = list()
   if(attr(solver_traj,'area_INC_AVG') == T){
-    n = length(solver_traj$iter) - 1L
+    n = solver_traj %>% .[length(.$iter), "iter"] #length(solver_traj$iter) - 1L
     firstAreaVal = solver_traj[2L, "area_between_AVGfit_Inc_iter"]
     lastAreaVal = solver_traj[n, "area_between_AVGfit_Inc_iter"]
 
