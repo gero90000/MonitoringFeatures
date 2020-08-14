@@ -200,6 +200,40 @@ getConvSpeed_2 = function(solver_traj, tri_area, trap_area){
   return(resls)
 }
 
+# +++ new +++
+getConvSpeed_3 = function(solvertraj){
+  
+  normalize_y = function(x, solvertraj, Y){
+    normalizer = base::mean(solvertraj[, Y])
+    x_norm = x / normalizer
+    return(x_norm)
+  }
+  resls = list()
+  res = list()
+  
+  ls = list("incumbant", "average.fitness")
+  for(i in 1:length(ls)){
+    
+    y_type = unlist(ls[i]) %>% as.character(.)
+    y1 = (solvertraj %>% .[1, y_type]) %>% normalize_y(., solvertraj, y_type)
+    y2 = (solvertraj %>% .[length(.$iter), y_type]) %>% normalize_y(., solvertraj, y_type)
+
+    # use logarithm to shrink the x range adequately, since y value is normalized
+    x1 = 0L
+    x2 = (solvertraj %>% .[length(.$iter), "iter"]) %>% log10(.)
+    
+    m = (y2-y1) / (x2-x1)
+    res[y_type] = m
+  }
+  
+  conv_speed = as.double(res["average.fitness"]) / as.double(res["incumbant"])
+  
+  resls = list.append(resls,
+                      conv_speed = conv_speed,
+                      slopes = res)
+  return(resls)
+}
+
 # TODO: incorporate "Knees" (cf. Feature list)
 # old: convQuality
 getConvQuality = function(solver_traj){

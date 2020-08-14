@@ -21,12 +21,14 @@ getDefaultStats = function(solvertraj, solvertraj_copy = "", eff_real_stat = FAL
     plateau_found_effective = 0L
   }
 
-  time_diff_stat_ls = makeStats("time_diff_eff", diff(solvertraj$time.passed))
-  effective_iter = length(solvertraj$iter) - 1L # indexing != iteration
-  
-  effective_runtime = res_eax$trajectory[effective_iter, "time.passed"]
+  effective_iter = solvertraj %>% .[length(.$iter), "iter"] #length(solvertraj$iter) - 1L # indexing != iteration
+  effective_runtime = solvertraj %>% .[length(.$iter), "time.passed"] #solvertraj[effective_iter, "time.passed"]
   avg_iter_duration = effective_runtime / effective_iter
 
+  # time per step related
+  time_diff_stat_ls = makeStats("time_diff_eff", diff(solvertraj$time.passed))
+
+  # ++++++++++++ TOOD: decouple it from absolute fitness value and make it a relative number +++++++++++
   #### incumbent and avg fitness related 
   # INCUMBANT
   incumbent_stat_ls = makeStats("incumbent", solvertraj$incumbant)
@@ -63,15 +65,24 @@ getDefaultStats = function(solvertraj, solvertraj_copy = "", eff_real_stat = FAL
     message("deriving default stats considering real and effective solver run relation")
     
     time_diff_stat_ls_real = makeStats("time_diff_real", diff(solvertraj_copy$time.passed))
-    real_iter = length(solvertraj_copy$iter) - 1L # indexing != iteration
-    effective_partion_iter = effective_iter / real_iter
 
-    real_runtime = solvertraj_copy[real_iter, "time.passed"] %>% round(., 0L)
+
+    real_iter = solvertraj_copy %>% .[length(.$iter), "iter"] 
+    real_iter_cleaned = real_iter - effective_iter
+    real_runtime = (solvertraj_copy %>% .[length(.$iter), "time.passed"]) %>% round(., 0L)
+    real_runtime_cleaned = real_runtime - effective_runtime
+
+
+    #eff-real relation
+    eff_real_iter_relation = (effective_iter / real_iter_cleaned)
+    eff_real_time_relation = (effective_runtime / real_runtime_cleaned)
+
+    effective_partion_iter = effective_iter / real_iter
+    effective_partion_time = effective_runtime / real_runtime #5L   or just take the defined cutoff time
 
     avg_iter_duration_real = real_runtime / real_iter
+    avg_iter_duration_real_cleaned = real_runtime_cleaned / real_iter_cleaned
 
-    # partion of effective vs real solver runtime
-    eff_real_time_ratio = effective_runtime / real_runtime #5L   or just take the defined cutoff time
 
     # partion of incumbent fitness between effective and real run
     incumbent_stat_ls_copy = makeStats("incumbent_copy", solvertraj_copy$incumbant)
@@ -89,9 +100,12 @@ getDefaultStats = function(solvertraj, solvertraj_copy = "", eff_real_stat = FAL
                             (avgFit_stat_ls_copy$Num_avgFit_copy * avgFit_stat_ls_copy$Mean_avgFit_copy)
     
     resls = list.append(resls,
-                        real_runtime = real_runtime, 
+                        real_runtime = real_runtime,
+                        real_runtime_cleaned = real_runtime_cleaned, 
                         real_iterations = real_iter,
+                        real_iterations_cleaned = real_iter_cleaned,
                         time_per_iter_AVG_real = avg_iter_duration_real,
+                        time_per_iter_AVG_real_cleaned = avg_iter_duration_real_cleaned,
                         #biggestDrop_span = same
 
                         time_diff_stat_ls_real = time_diff_stat_ls_real,
@@ -100,10 +114,13 @@ getDefaultStats = function(solvertraj, solvertraj_copy = "", eff_real_stat = FAL
                         avgFit_stat_ls_real = avgFit_stat_ls_copy,
                         avgFit_diff_stat_ls_real = avgFit_diff_stat_ls_copy,
 
-
                         # proportional KPIs
-                        eff_real_iter_ratio = effective_partion_iter,
-                        eff_real_time_ratio = eff_real_time_ratio,
+                        # +++ new +++
+                        eff_real_iter_relation = eff_real_iter_relation,
+                        eff_real_time_relation = eff_real_time_relation,
+
+                        effective_partion_iter = effective_partion_iter,
+                        effective_partion_time = effective_partion_time,
 
                         incumbent_eff_real_ratio = Incumbent_Eff_real_ratio,
                         avgFit_eff_real_ratio = AVGfit_Eff_real_ratio
