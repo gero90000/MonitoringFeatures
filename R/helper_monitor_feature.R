@@ -3,6 +3,8 @@
 
 # scales the avg.fitness and incumbent with min-max scaling,
 # whereby min and max do relate on an per instance basis on the incumbent trajectory
+# TODO:
+# since incumbents, avg.fitness, and lower bound (sum of |V cheapest edges) use S3
 scaler_orig = function(solvertraj){
   resls = list()
   ls = c("incumbant", "average.fitness")
