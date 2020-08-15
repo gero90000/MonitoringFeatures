@@ -1,6 +1,58 @@
 #TODO
 # put roxygen2 comment here
 
+# scales the avg.fitness and incumbent with min-max scaling,
+# whereby min and max do relate on an per instance basis on the incumbent trajectory
+scaler_orig = function(solvertraj){
+  resls = list()
+  ls = c("incumbant", "average.fitness")
+  min_inc = min(solvertraj$incumbant)
+  max_inc = max(solvertraj$incumbant)
+  
+  for(i in 1:length(ls)){
+    tobe_scaled = ls[i]
+    tmp = sapply(solvertraj[tobe_scaled], function(x){
+            (x-min_inc) / (max_inc -min_inc)
+    })
+    resls[[i]] = tmp
+  }
+  # attr(solver_traj,'MIN_MAX_scaled') <- TRUE
+  return(resls)
+}
+
+# shrink and log scale of data on an per-instance basis
+scaler_other = function(solvertraj){
+  res = list()
+  plls = list()
+  shapirols = list()
+  resls = list()
+  ls = c("incumbant", "average.fitness")
+  
+  for(i in 1:length(ls)){
+    col = ls[i]
+    # 1) shrink range
+    tmp = sapply(solvertraj[col], function(x){
+      x - min(solvertraj["incumbant"])
+    })
+    # 2) use natural logarithm
+    tmp_2 = sapply(tmp, log)
+    tmp_2[length(tmp_2)] <- 0L
+    res[[i]] = tmp_2
+    
+    # TODO: fix
+    plot_trans = plot(density(tmp_2))
+    plls[[i]] = plot_trans
+    
+    tmp_test = shapiro.test(tmp_2)
+    shapirols[[i]] <- tmp_test
+  }
+  
+  resls = list.append(resls,
+                      scales = res,
+                      plots = plls,
+                      shapirols = shapirols)
+}
+
 # FIXME: a little off since order of names and function list 
 #        must be the "same" semantically
 getStatSetNames = function() {
