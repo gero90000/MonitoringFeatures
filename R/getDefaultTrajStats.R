@@ -11,6 +11,16 @@
 # can be used both for default stats for orig and copy (i.e., effective and real)
 # but also for specialized effective stats when called like 
 # getDefaultStats(res_eax$trajectory, res_eax_copy$trajectory, eff_real_stat = TRUE)
+#' Title
+#'
+#' @param solvertraj 
+#' @param solvertraj_copy 
+#' @param eff_real_stat 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 getDefaultStats = function(solvertraj, solvertraj_copy = "", eff_real_stat = FALSE) {
   resls = list()
 
@@ -144,6 +154,14 @@ getDefaultStats = function(solvertraj, solvertraj_copy = "", eff_real_stat = FAL
 
 
 # for convenience put as a new function
+#' Title
+#'
+#' @param solvertraj 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 time_X_stats = function(solvertraj){
   resl = list()
   resls_time = c()

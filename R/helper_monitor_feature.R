@@ -5,6 +5,19 @@
 # whereby min and max do relate on an per instance basis on the incumbent trajectory
 # TODO:
 # since incumbents, avg.fitness, and lower bound (sum of |V cheapest edges) use S3
+
+
+
+
+
+
+# cf. scaler.R for S3 way
+
+
+
+
+### TODO: fix the S3 issue and get rid of these functions
+# scale_multi
 scaler_orig = function(solvertraj){
   resls = list()
   ls = c("incumbant", "average.fitness")
@@ -53,16 +66,34 @@ scaler_other = function(solvertraj){
                       scales = res,
                       plots = plls,
                       shapirols = shapirols)
+
+  return(resls)
 }
+
+
+
+
+
+
+
+
 
 # FIXME: a little off since order of names and function list 
 #        must be the "same" semantically
+#' Title
+#'
+#' @return
+#' @export
 getStatSetNames = function() {
   return(c("Num", "Min", "Max", "Mean", "Mode",
     "Median", "Quantiles", "SD", "Var", "Skew", "Span", "Varcoeff"))
 }
 
 # helper for @makeStats
+#' Title
+#'
+#' @return
+#' @export
 getStatFuncs = function(){
   stat.func = c("length(x)", "min(x)", "max(x)", "mean(x)", 
                 "getMode(x)", "median(x)", "quantile(x)", 
@@ -77,6 +108,14 @@ getStatFuncs = function(){
 
 # old: get_mode
 # helper for stat functions
+#' Title
+#'
+#' @param list 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 getMode = function(list) {
   uniqElems = unique(list)
   list(x = uniqElems, y = list) %>% {
@@ -85,6 +124,16 @@ getMode = function(list) {
 }
 
 # old: make_stats
+#' Title
+#'
+#' @param name 
+#' @param stat_ls 
+#' @param stat_flag 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 makeStats = function(name, stat_ls, stat_flag = T){
   stat_ls = unlist(stat_ls)
   
@@ -134,6 +183,16 @@ init.platFound = function(){
 }
 '
 # introduce plateaus in trajectory df
+#' Title
+#'
+#' @param df 
+#' @param newr 
+#' @param r 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 shoveRow = function(df, newr, r) {
   df[seq(r + 1, nrow(df) + 1), ] = df[seq(r, nrow(df)), ]
   df[r, ] = newr
@@ -141,6 +200,14 @@ shoveRow = function(df, newr, r) {
 }
 
 # old: findPlat
+#' Title
+#'
+#' @param solver_traj 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 insertPlateaus = function(solver_traj) { 
   foundPlat__ = FALSE
   l = length(solver_traj$iter) 
@@ -182,6 +249,14 @@ getPlateauDF = function(solver_traj){
 # Idea: impute valid time stamps to Plateau values 
 # (otherwise we would have the same timestamp multiple time biasing our statistics)
 # old: time_corrector
+#' Title
+#'
+#' @param solver_traj 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 imputeTimes = function(solver_traj){
 
   if(attr(solver_traj,'plateaunized') == T){
@@ -221,6 +296,14 @@ imputeTimes = function(solver_traj){
 # only apply this to a copy of res_eax (i.e., res_eax_copy)
 # TODO assert()  check "copy" attribute / plateau class class 
 # old: impute_plateau
+#' Title
+#'
+#' @param solver_traj 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 imputeLastPlateau = function(solver_traj){
 
   if(attr(solver_traj,'plateaunized_called') == T & 
@@ -262,6 +345,15 @@ imputeLastPlateau = function(solver_traj){
 }
 
 # dependcy to getFeatureSet (salesperson)
+#' Title
+#'
+#' @param black.list 
+#' @param instance 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 try.getFeatureSet = function(black.list, instance) {
   out = tryCatch(
     {
@@ -288,10 +380,22 @@ try.getFeatureSet = function(black.list, instance) {
 }
 
 ## helper function that tests whether an object is either NULL or list of NULLs
+#' Title
+#'
+#' @param x 
+#'
+#' @return
+#' @export
 is.NullOb = function(x) {
   is.null(x) | all(sapply(x, is.null))
 }
 ## Recursively step down into list, removing all such objects 
+#' Title
+#'
+#' @param x 
+#'
+#' @return
+#' @export
 rmNullObs = function(x) {
   x = Filter(Negate(is.NullOb), x)
   lapply(x, function(x) if(is.list(x)){

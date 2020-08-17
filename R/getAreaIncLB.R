@@ -15,6 +15,15 @@ std::partial_sort(ddd.begin(), ddd.begin() + n_cities, ddd.end());
 sum_of_lowest_edge_values = std::accumulate(ddd.begin(), ddd.begin() + n_cities, 0.0);'
 
 # old: incCurve_lb_area
+#' Title
+#'
+#' @param solver_traj 
+#' @param lb 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 getIncLB_area = function(solver_traj, lb){
   resls = list()
   area_ls = list()
@@ -51,6 +60,16 @@ getIncLB_area = function(solver_traj, lb){
 }
 
 # incLB_area_plot
+#' Title
+#'
+#' @param solver_traj 
+#' @param lb 
+#' @param IncLB_stat 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 makeIncLB_area_plot = function(solver_traj, lb, IncLB_stat){
   ggplot(data=solver_traj, aes(x = iter, y = incumbant)) +
     geom_step() +

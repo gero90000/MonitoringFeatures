@@ -5,6 +5,15 @@
 #   Fit quadratic model to (ti, fi), 
 #   i = 1,... , n. Have a look at model coefficients etc.
 
+#' Title
+#'
+#' @param solver_traj 
+#' @param plot 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 getQuadraticModelCoeff = function(solver_traj, plot = FALSE){
   resls = list()
   p = NA

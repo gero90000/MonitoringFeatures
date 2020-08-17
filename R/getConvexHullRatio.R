@@ -7,6 +7,14 @@
 #   i = 1,... , n and reference point (tn, max(fi)).
 
 # old: convex_hull_ratio
+#' Title
+#'
+#' @param solver_traj 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 getCHULLratio = function(solver_traj){
   resls = list()
   X = as.matrix(solver_traj[, c("iter", "incumbant")], ncol = 2)
@@ -34,6 +42,14 @@ getCHULLratio = function(solver_traj){
 }
 
 # old: chull_plot
+#' Title
+#'
+#' @param solver_traj 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 makeCHULL_plot = function(solver_traj){
   X = as.matrix(solver_traj[, c("iter", "incumbant")], ncol = 2)
   X = rbind(X, c(max(solver_traj$iter), max(solver_traj$incumbant)))
@@ -46,3 +62,5 @@ makeCHULL_plot = function(solver_traj){
   points(X[hpts, ], col = "magenta", pch = 13, cex=2, lwd = 2)
   points(X[-hpts, ], col = "black", cex = 0.5, pch = 16)
 }
+
+

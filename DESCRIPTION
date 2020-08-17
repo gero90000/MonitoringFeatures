@@ -5,3 +5,4 @@ Version: 0.0.1
 License: todo
 Author: Bjoern Breilmann <bjoernbreilmann@uni-muenster.de>
 Maintainer: Bjoern Breilmann <bjoernbreilmann@web.de>
+RoxygenNote: 7.1.0

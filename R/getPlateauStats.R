@@ -9,6 +9,14 @@
 # helper for @calcSuccessRatio()
 # unsuccesful runs == 1 step length in Plateau 
 # old: countPlateauLength
+#' Title
+#'
+#' @param solver_traj 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 getPlateauLength = function(solver_traj){
   # brauchen wir nicht mehr da wir ja immer mit findplat() anfangen 
   #solver_traj = findPlat(solver_traj)#getPlateauDF(solver_traj) 
@@ -19,6 +27,14 @@ getPlateauLength = function(solver_traj){
 
 # FIXED: get rid of global init settings
 # old: calcSuccessRatio
+#' Title
+#'
+#' @param solver_traj 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 getSuccessRatio = function(solver_traj){
   resls = list()
   # Plateau length == number of noSuccess steps in trajectory
@@ -48,6 +64,15 @@ getSuccessRatio = function(solver_traj){
 #  mean, sd, min, max, total length
 
 # old: calcPlateauStats
+#' Title
+#'
+#' @param solver_traj 
+#' @param successRatio 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 getPlateauStats = function(solver_traj, successRatio){
   resls = list()
   plat_stat_ls = list()
@@ -87,6 +112,16 @@ getPlateauStats = function(solver_traj, successRatio){
 #  and count Plateaus within intervals
 
 # old: getPlateau_DivAmnt
+#' Title
+#'
+#' @param solver_traj 
+#' @param interval 
+#' @param successRatio 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 getPlateauStartStats = function(solver_traj, interval, successRatio){
   resls = list()
   plat_start = list()
@@ -234,6 +269,16 @@ getPlateauStartStats = function(solver_traj, interval, successRatio){
 
 # Wrapper for plotting the outome of @getPlateau_DivAmnt()
 # data$interval Points works in vline because data is passed before data$data is extracted in ggplot
+#' Title
+#'
+#' @param data 
+#' @param incumbant 
+#' @param V1 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 generateIntervalplot = function(data, incumbant = "incumbant", V1 = "V1") {
   if(is.null(data[["data"]])){
     writeLines("ToDo: ERRORHANDLING here")
@@ -263,6 +308,15 @@ generateIntervalplot = function(data, incumbant = "incumbant", V1 = "V1") {
   }
 }
 
+#' Title
+#'
+#' @param test_ls 
+#' @param solver_traj 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 makePlateau_plot = function(test_ls, solver_traj){
   C = test_ls$plat_start$plats_positions
   hlines = unlist(test_ls$interval_contains)

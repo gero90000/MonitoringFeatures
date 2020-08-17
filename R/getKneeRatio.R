@@ -5,6 +5,16 @@
 #   (here a knee is a point on the curve where the slope before is big and low after)
 
 # old: get_knee_ratio
+#' Title
+#'
+#' @param solver_traj 
+#' @param VG_stats 
+#' @param plat_start_stats 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 getKneeRatio = function(solver_traj, VG_stats, plat_start_stats){
   resls = list()
   knee_ls = list()
@@ -114,6 +124,15 @@ getKneeRatio = function(solver_traj, VG_stats, plat_start_stats){
 }
 
 # old: make_knee_plot
+#' Title
+#'
+#' @param solver_traj 
+#' @param knee_stats 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 makeKnee_plot = function(solver_traj, knee_stats){
   knee_points = solver_traj[which(solver_traj$iter %in% knee_stats$knee_ls), "incumbant"]
   if(length(knee_stats$knee_ls) == 0){

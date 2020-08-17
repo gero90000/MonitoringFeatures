@@ -7,6 +7,14 @@
 
 # old: get_VG_stats
 # TODO: maybe introduce quantile steps (here 0.05 as parameter "quant_by", and vg-threshold setter for drops[] as "quant_vg")
+#' Title
+#'
+#' @param solver_traj 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 getVG_stats = function(solver_traj){
   result = list()
   VG_stat_ls = list()
@@ -87,6 +95,17 @@ getVG_stats = function(solver_traj){
 #  find related helpers in helper_monitor_feature.R
 
 # TODO: add real starting position of vertical gap 
+#' Title
+#'
+#' @param solver_traj 
+#' @param VG_stats 
+#' @param interval 
+#' @param increasing 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 getVGStartStats = function(solver_traj, VG_stats, interval, increasing){
   resls = list()
   # idea_1:
@@ -187,6 +206,13 @@ getVGStartStats = function(solver_traj, VG_stats, interval, increasing){
 }
 
 # old: calc_Gap_Power
+#' Title
+#'
+#' @param VGstats 
+#' @param solver_traj 
+#'
+#' @return
+#' @export
 getGapPower = function(VGstats, solver_traj){
   resls = list()
   if(attr(solver_traj,'vertical_gaps') == T){
@@ -231,6 +257,13 @@ makeVG_hist = function(VGstats){
 }
 
 # old: make_VG_plot
+#' Title
+#'
+#' @param VGstats 
+#' @param solver_traj 
+#'
+#' @return
+#' @export
 makeVG_plot = function(VGstats, solver_traj){
   helper = VGstats$improvements
   helper = as.data.frame(cbind(helper$improvement, seq(1:length(VGstats$improvements$improvement))))

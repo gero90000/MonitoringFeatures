@@ -5,6 +5,14 @@
 #   RUE, NETGEN, and TSPLIB
 
 ################# generate RUE instances ###################################################
+#' Title
+#'
+#' @param assembled 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 load_rue_instances = function(assembled){
   tsp.rue.ls = list()
   for(i in 1:length(assembled)){
@@ -16,6 +24,16 @@ load_rue_instances = function(assembled){
 }
 
 ################# generate NETGEN instances ################################################
+#' Title
+#'
+#' @param assembled 
+#' @param n.dim 
+#' @param n.cluster 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 load_netgen.cluster_instances = function(assembled, n.dim, n.cluster){
   tsp.netgen.cluster.ls = list()
   for(i in 1:length(assembled)){
@@ -29,6 +47,15 @@ load_netgen.cluster_instances = function(assembled, n.dim, n.cluster){
   return(tsp.netgen.cluster.ls)
 }
 
+#' Title
+#'
+#' @param assembled 
+#' @param n.dim 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 load_netgen.grid_instances = function(assembled, n.dim){
   tsp.netgen.grid.ls = list()
   for(i in 1:length(assembled)){
@@ -42,6 +69,15 @@ load_netgen.grid_instances = function(assembled, n.dim){
 }
 
 ################# generate TSPLIB instances ################################################
+#' Title
+#'
+#' @param path_to_testdata 
+#' @param path_to_salesperson 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 load_tsplib_instances = function(path_to_testdata, path_to_salesperson){
   curwd = getwd()
   setwd(path_to_salesperson)
@@ -61,6 +97,19 @@ load_tsplib_instances = function(path_to_testdata, path_to_salesperson){
 }
 
 ################# __MAIN__()  ##############################################################
+#' Title
+#'
+#' @param assembled 
+#' @param n.dim 
+#' @param n.cluster 
+#' @param path_to_testdata 
+#' @param path_to_salesperson 
+#' @param ... 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 make_generator_instances = function(assembled, n.dim, n.cluster, path_to_testdata,
                                     path_to_salesperson, ...){
   generator_instances = list()

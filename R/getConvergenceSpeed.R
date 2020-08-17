@@ -6,6 +6,15 @@
 #  area between incumbent lower bound and avg fitness upper bound 
 #  over trajectory --> exhibit %-wise contribution per rectangle
 
+#' Title
+#'
+#' @param solver_traj 
+#' @param growth 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 getAreaAVGInc = function(solver_traj, growth){
   solver_traj$area_between_AVGfit_Inc = NA
   solver_traj$area_between_AVGfit_Inc_iter = NA
@@ -50,6 +59,15 @@ getAreaAVGInc = function(solver_traj, growth){
 
 # TODO: add the simple convergence Speed idea to ConvSpeed_1:
 #       (first_dist - last_dist) / distance  
+#' Title
+#'
+#' @param solver_traj 
+#' @param timebased 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 getConvSpeed_1 = function(solver_traj, timebased){
   convIter = 0L
   convIter_2 = 0L 
@@ -130,6 +148,16 @@ getConvSpeed_1 = function(solver_traj, timebased){
 #  get convergence measure by dividing triangle area by idealized trapezoid or rectangle area 
 
 # old: calc_areas
+#' Title
+#'
+#' @param solver_traj 
+#' @param triangle 
+#' @param trapezoid 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 calcTrigonometricAreas = function(solver_traj, triangle, trapezoid){
   areals = list()
 
@@ -180,6 +208,16 @@ calcTrigonometricAreas = function(solver_traj, triangle, trapezoid){
   return(areals)
 }
 
+#' Title
+#'
+#' @param solver_traj 
+#' @param tri_area 
+#' @param trap_area 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 getConvSpeed_2 = function(solver_traj, tri_area, trap_area){
   resls = list()
 
@@ -201,6 +239,14 @@ getConvSpeed_2 = function(solver_traj, tri_area, trap_area){
 }
 
 # +++ new +++
+#' Title
+#'
+#' @param solvertraj 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 getConvSpeed_3 = function(solvertraj){
   
   normalize_y = function(x, solvertraj, Y){
@@ -236,6 +282,14 @@ getConvSpeed_3 = function(solvertraj){
 
 # TODO: incorporate "Knees" (cf. Feature list)
 # old: convQuality
+#' Title
+#'
+#' @param solver_traj 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 getConvQuality = function(solver_traj){
   resls = list()
   
@@ -263,6 +317,14 @@ getConvQuality = function(solver_traj){
 }
 
 # old: convspeed_2_plot
+#' Title
+#'
+#' @param solver_traj 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 makeConvSpeed_2_plot = function(solver_traj){
   areasls = calcTrigonometricAreas(solver_traj, TRUE, TRUE)
   tri_peak =   areasls$tri_peak
@@ -323,6 +385,15 @@ makeConvSpeed_2_plot = function(solver_traj){
 # we want to still have our convergence speed based on the comparison 
 # between the triangle (wo last plateau) and the step function area (w plateau)
 # old: convspeed_2_plot_strict
+#' Title
+#'
+#' @param solver_traj 
+#' @param solver_traj_wo_plat 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 makeConvSpeed_2_strict_plot = function(solver_traj, solver_traj_wo_plat){
   areasls = calcTrigonometricAreas(solver_traj_wo_plat, TRUE, TRUE)
   tri_peak =   areasls$tri_peak

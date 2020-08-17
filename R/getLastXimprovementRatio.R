@@ -7,6 +7,19 @@
 
 # old: last_X_improvement
 # TODO: paramterize with "backwards" = T/F and sum up from beginning or end accordingly 
+#' Title
+#'
+#' @param solver_traj 
+#' @param p_percent_observation 
+#' @param backwards 
+#' @param from_to 
+#' @param from 
+#' @param to 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 getLastXimprovement = function(solver_traj, p_percent_observation=NULL, backwards=TRUE, from_to = FALSE, from=NULL, to=NULL){
   result = list()
   resls = list()

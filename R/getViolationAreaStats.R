@@ -7,6 +7,17 @@
 #   the higher the ration the more unstable is the trajectory
 
 # old: get_vio_plat
+#' Title
+#'
+#' @param solver_traj 
+#' @param VG_stats 
+#' @param Plat_start_stats 
+#' @param Plat_stats 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 getVioPlat = function(solver_traj, VG_stats, Plat_start_stats, Plat_stats){
   resls = list()
   vg_last = NA
@@ -66,6 +77,16 @@ getVioPlat = function(solver_traj, VG_stats, Plat_start_stats, Plat_stats){
 }
 
 # make_plateau_vio_plot
+#' Title
+#'
+#' @param vio_stats 
+#' @param solver_traj 
+#' @param VGstats 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 makePlateauVio_plot = function(vio_stats, solver_traj, VGstats){
   helper = vio_stats$vg
   C = vio_stats$plat_pos_avg

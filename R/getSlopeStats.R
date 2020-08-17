@@ -9,6 +9,14 @@
 
 # TODO: clarify if min slope should be -7 or 0 (*-1 or not in min and max)
 # old: get_slope_stats
+#' Title
+#'
+#' @param solver_traj 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 getSlopeStats = function(solver_traj){
   result = list()
   versions = list()
@@ -64,6 +72,14 @@ getSlopeStats = function(solver_traj){
 
 # TODO: make statistic about direction changes
 # old: get_slope_direction_stats
+#' Title
+#'
+#' @param solver_traj 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 getSlopeDirectionStats = function(solver_traj){
   result = list()
   resls = list()
