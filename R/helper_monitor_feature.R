@@ -8,16 +8,10 @@
 
 
 
-
-
-
 # cf. scaler.R for S3 way
-
-
-
-
 ### TODO: fix the S3 issue and get rid of these functions
 # scale_multi
+'
 scaler_orig = function(solvertraj){
   resls = list()
   ls = c("incumbant", "average.fitness")
@@ -31,7 +25,7 @@ scaler_orig = function(solvertraj){
     })
     resls[[i]] = tmp
   }
-  # attr(solver_traj,'MIN_MAX_scaled') <- TRUE
+  # attr(solver_traj,"MIN_MAX_scaled") <- TRUE
   return(resls)
 }
 
@@ -69,14 +63,7 @@ scaler_other = function(solvertraj){
 
   return(resls)
 }
-
-
-
-
-
-
-
-
+'
 
 # FIXME: a little off since order of names and function list 
 #        must be the "same" semantically

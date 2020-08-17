@@ -37,6 +37,20 @@ scalerOwn.scale_multi <- function(solvertraj, ...){
   return(resls)
 } 
 
+#' Method for Scalar values
+#'
+#' @param LB 
+#' @param min_inc 
+#' @param max_inc 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+scalerOwn.scale_Scalar = function(LB, min_inc, max_inc, ...){
+  scaled_scalar = (LB - min_inc) / (max_inc - min_inc)
+  return(scaled_scalar)
+}
 
 #' Method for res_eax Object
 #'
