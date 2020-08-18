@@ -121,5 +121,69 @@ getSlopeDirectionStats = function(solver_traj){
   return(result)
 }
 
+#' Title
+#'
+#' @param solvertraj 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+linear_slope_analyzer = function(solvertraj){
+  resls = list()
+  res = list()
+  
+  f = function(x, m ,b){
+    y = (m * x) + b
+    return(y)
+  }
+  
+  for(i in 1:9){
+    res = list()
+    x_rel = switch(i,
+                   0.1,
+                   0.2,
+                   0.3,
+                   0.4,
+                   0.5,
+                   0.6,
+                   0.7,
+                   0.8,
+                   0.9
+    ) 
+    x_abs = (solvertraj[length(solvertraj[, "iter"]) ,"iter"] * x_rel) %>% round(., 0L)
+    
+    x1 = 0L
+    x2 = x_abs
+    y1 = solvertraj[1, "incumbant"]
+    y2 = solvertraj[x2, "incumbant"]
+    
+    b = solvertraj[1, "incumbant"]
+    m = (y2-y1) / (x2-x1)
+    
+    gret = 0L
+    lt = 0L
+    for(j in 1:x2){
+      tmp = f(j, m, b)
+      if(round(tmp, 3) <= round(res_eax$trajectory[j, "incumbant"], 3)){
+        gret = gret + 1L
+      } else {
+        lt = lt + 1L
+      }
+    }
+    res = list.append(res, 
+                      gret = gret,
+                      lt = lt)
+    resls[[i]] = res
+  }
+  return(resls)
+}
+
+
+
+
+
+
+
 
 

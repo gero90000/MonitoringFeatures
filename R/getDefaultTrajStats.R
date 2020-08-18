@@ -37,22 +37,11 @@ getDefaultStats = function(solvertraj, solvertraj_copy = "", eff_real_stat = FAL
 
   # time per step related
   time_diff_stat_ls = makeStats("time_diff_eff", diff(solvertraj$time.passed))
-
-
-
-
-
-  # ++++++++++++ TOOD: decouple it from absolute fitness value and make it a relative number +++++++++++
   #### incumbent and avg fitness related 
   # INCUMBANT
   # abs
   incumbent_stat_ls = makeStats("incumbent", solvertraj$incumbant)
   incumbent_diff_stat_ls = makeStats("incumbent_diff", diff(solvertraj$incumbant))
-  # rel
-  # TODO ...  there comes a new column
-
-
-
 
   ##### CF IDEA ON BOARD (15.6.20)
   # idea: emprically derive a threshold here to declare a "drop" as "VG"

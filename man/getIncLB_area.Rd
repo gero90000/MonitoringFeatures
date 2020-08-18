@@ -4,7 +4,7 @@
 \alias{getIncLB_area}
 \title{Title}
 \usage{
-getIncLB_area(solver_traj, lb)
+getIncLB_area(solver_traj, lb, ub)
 }
 \arguments{
 \item{solver_traj}{}
