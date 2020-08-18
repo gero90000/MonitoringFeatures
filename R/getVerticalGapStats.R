@@ -248,12 +248,12 @@ getGapPower = function(VGstats, solver_traj){
 # old: make_VG_hist
 makeVG_hist = function(VGstats){
   ggplot(data = VGstats$vertical_gaps_data, aes(x = vg_df)) +
-    geom_bar(color = "black", stat = "count", alpha = 0.4) +  #geom_histogram
     geom_density(color = "purple", size = 1, fill = "purple", alpha = 0.6) +
+    geom_bar(color = "black", stat = "count", alpha = 0.4) +  #geom_histogram
     scale_y_continuous(breaks = seq(1:(length(VGstats$vertical_gaps_data
                                               [which(VGstats$vertical_gaps_data$vg_df == 
-                                                     VGstats$vg_stats$Mode_Vertical_Gaps), ]+1)))) +
-    scale_x_discrete(limits= unique(VGstats$vertical_gaps_data$vg_df))
+                                                     VGstats$vg_stats$Mode_Vertical_Gaps), ]+1)))) #+
+    #scale_x_continuous(limits= unique(VGstats$vertical_gaps_data$vg_df))
 }
 
 # old: make_VG_plot
@@ -280,8 +280,8 @@ makeVG_plot = function(VGstats, solver_traj){
                      ymin = solver_traj[length(solver_traj$iter), 'incumbant'], 
                      xmax = Inf, 
                      ymax = Inf, alpha = 0.3, fill = "tomato") +
-    geom_vline(xintercept = helper$V2, linetype = "solid", color = "grey", alpha = 0.3) +
-    geom_vline(xintercept = helper$V2, linetype = "solid", color = "black", alpha = 0.3) +
+    geom_vline(xintercept = helper$V2, linetype = "solid", color = "purple", alpha = 0.3) +
+    geom_vline(xintercept = helper$V2, linetype = "solid", color = "purple", alpha = 0.3) +
     geom_segment(x = 0 , 
                  y = solver_traj[1, "incumbant"], 
                  xend = helper[length(helper$V2), "V2"], 
