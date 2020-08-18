@@ -49,6 +49,7 @@ scalerOwn.scale_multi <- function(solvertraj, ...){
 #' @examples
 scalerOwn.scale_Scalar = function(LB, min_inc, max_inc, ...){
   scaled_scalar = (LB - min_inc) / (max_inc - min_inc)
+  scaled_scalar = scaled_scalar %>% as.numeric(.)
   return(scaled_scalar)
 }
 

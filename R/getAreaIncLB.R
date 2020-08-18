@@ -24,9 +24,10 @@ sum_of_lowest_edge_values = std::accumulate(ddd.begin(), ddd.begin() + n_cities,
 #' @export
 #'
 #' @examples
-getIncLB_area = function(solver_traj, lb){
+getIncLB_area = function(solver_traj, lb, ub){
   resls = list()
   area_ls = list()
+  area_sum = 0L
   stat_flag = T
 
   if (attr(res_eax$trajectory, 'plateaunized_called') == F){
@@ -35,21 +36,21 @@ getIncLB_area = function(solver_traj, lb){
   if(length(solver_traj$iter) == 1){
     message("WARNING: since trajectory length is 1, no INC-LB area computable.")
     #area_ls = list()
-    area_sum = 0L
+    #area_sum = 0L
     stat_flag = F
   } else {
     #area_ls = list()
     area = 0L
-    area_sum = 0L
+    #area_sum = 0L
     for (i in 2:length(solver_traj$iter)) {
       w = 1L #res_eax$trajectory[i, "iter"] - res_eax$trajectory[i - 1, "iter"]
-      h = solver_traj[i - 1, "incumbant"] - lb
+      h = solver_traj[i - 1L, ub] - lb # "incumbant"
       area = w * h
       area_sum = area_sum + area
       area_ls[[i-1]] = area
     }  
   }
-  name = "areas"
+  name = paste("areas_", ub, sep = "")
   area_stat_ls = unlist(area_ls)
   area_stats = makeStats(name, area_stat_ls, stat_flag)
   resls = list.append(resls,

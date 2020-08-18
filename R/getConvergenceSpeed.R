@@ -249,24 +249,29 @@ getConvSpeed_2 = function(solver_traj, tri_area, trap_area){
 #' @examples
 getConvSpeed_3 = function(solvertraj){
   
+  # TODO: not needed anymore when 
   normalize_y = function(x, solvertraj, Y){
     normalizer = base::mean(solvertraj[, Y])
-    x_norm = x / normalizer
+    x_norm = x / 1L #normalizer
     return(x_norm)
   }
+
   resls = list()
   res = list()
-  
   ls = list("incumbant", "average.fitness")
+
   for(i in 1:length(ls)){
     
     y_type = unlist(ls[i]) %>% as.character(.)
     y1 = (solvertraj %>% .[1, y_type]) %>% normalize_y(., solvertraj, y_type)
     y2 = (solvertraj %>% .[length(.$iter), y_type]) %>% normalize_y(., solvertraj, y_type)
+    print(y1)
+    print(y2)
 
     # use logarithm to shrink the x range adequately, since y value is normalized
     x1 = 0L
-    x2 = (solvertraj %>% .[length(.$iter), "iter"]) %>% log10(.)
+    x2 = (solvertraj %>% .[length(.$iter), "iter"]) #%>% log10(.)
+    print(x2)
     
     m = (y2-y1) / (x2-x1)
     res[y_type] = m

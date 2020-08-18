@@ -165,6 +165,8 @@ getPlateauStartStats = function(solver_traj, interval, successRatio){
     characteristic_volume = characteristic_volume_X * characteristic_volume_Y
 
     plat_start_X_abs = makeStats("plat_start_X_abs", plats$abs_X)
+    plat_start_X_rel = makeStats("plat_start_X_rel", plats$rel_X)
+    plat_start_Y_abs = makeStats("plat_start_Y_abs", plats$abs_Y)
     plat_start_Y_rel = makeStats("plat_start_Y_rel", plats$rel_Y)
 
     x_abs = plats_positions$iter[1]
@@ -187,8 +189,12 @@ getPlateauStartStats = function(solver_traj, interval, successRatio){
                              Plats_area_begin_X_abs = x_abs,
                              Plats_area_begin_Y = Plats_area_begin_Y,
                              Plats_area_begin_Y_abs = y_abs,
+
                              plat_start_X_abs_Stats = plat_start_X_abs,
+                             plat_start_X_rel_Stats = plat_start_X_rel,
+                             plat_start_Y_abs_Stats = plat_start_Y_abs,
                              plat_start_Y_rel_Stats = plat_start_Y_rel,
+
                              characteristic_volume_X = characteristic_volume_X,
                              characteristic_volume_Y = characteristic_volume_Y,
                              characteristic_volume = characteristic_volume,
@@ -243,8 +249,12 @@ getPlateauStartStats = function(solver_traj, interval, successRatio){
                              Plats_area_begin_X_abs = NA,
                              Plats_area_begin_Y = NA,
                              Plats_area_begin_Y_abs = NA,
+
                              plat_start_X_abs_Stats = NA,
+                             plat_start_X_rel_Stats = NA,
+                             plat_start_Y_abs_Stats = NA,
                              plat_start_Y_rel_Stats = NA,
+
                              characteristic_volume_X = NA,
                              characteristic_volume_Y = NA,
                              characteristic_volume = NA,

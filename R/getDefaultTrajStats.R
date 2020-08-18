@@ -186,10 +186,9 @@ time_X_stats = function(solvertraj){
   
   resl = list.append(resl,
                      time_passed_iter_X = resls_time,
-                     time_passed_iter__diff = resls_time_diff,
+                     time_passed_iter_diff = resls_time_diff,
                      time_passed_iter_X_diff_stats = resls_time_diff_stats
                      )
-
 }
 
 
