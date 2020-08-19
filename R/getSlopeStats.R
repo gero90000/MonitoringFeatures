@@ -164,13 +164,13 @@ lina_default = function(solvertraj, which){
       
       gret = 0L
       lt = 0L
-      for(j in 0:x2){
+      for(j in x1:x2){
         tmp = f(j, m, b)
         #print(round(tmp, 3))
         #print(round(solvertraj[j+1L, which], 3L))
         #print("...............")
  
-        if(round(tmp, 3) <= round(solvertraj[j+1L, which], 3L)){  # +1 needed since index != iteration
+        if(round(tmp, 4) <= round(solvertraj[j+1L, which], 4L)){  # +1 needed since index != iteration
           gret = gret + 1L
           #print("yes")
         } 
@@ -190,7 +190,31 @@ lina_default = function(solvertraj, which){
   {
     message("Warning: please specify correct trajectories.")
   }
-  return(resls)
+
+   # derive summary statistics to return object abozt gret, lt, and slopes
+  tmp_resls <- data.frame(matrix(ncol = 3, nrow = 0))
+  x <- c("gret", "lt", "slope")
+  colnames(tmp_resls) <- x
+  
+  for(i in 1:length(resls)){
+    current_ls = resls[i] %>% unlist(.)
+    for(j in 1:length(current_ls)){
+      #print(current_ls[j] %>% unlist(.) %>% as.numeric(.))
+      tmp_resls[i, j] <- current_ls[j] %>% unlist(.) %>% as.numeric(.)
+    }
+  }
+
+  gret_stats = makeStats("gret", tmp_resls$gret, stat_flag = T)
+  lt_stats = makeStats("lt", tmp_resls$lt, stat_flag = T)
+  slope_stats = makeStats("slope", tmp_resls$slope, stat_flag = T)
+
+  final_resls = list()
+  final_resls = list.append(final_resls,
+                            tmp_resls = tmp_resls,
+                            gret_stats = gret_stats,
+                            lt_stats = lt_stats,
+                            slope_stats = slope_stats)
+  return(final_resls)
 }
 
 #' Title
@@ -203,6 +227,7 @@ lina_default = function(solvertraj, which){
 #'
 #' @examples
 lina_consecutive = function(solvertraj, by_what, which){
+
   f = function(x, m ,b){
     y = (m * x) + b
     return(y)
@@ -213,7 +238,7 @@ lina_consecutive = function(solvertraj, by_what, which){
   iter_amnt = solvertraj[length(solvertraj$iter), "iter"]
   iter_last = iter_amnt
   batch = (iter_amnt / by_what) %>% base::ceiling(.)
-  print(batch)
+
   sum = 0L
   batch_ls = list()
   # get the batches, i.e., amount of iterations we can later have a window from x_i-1 to x_i, etc.
@@ -228,8 +253,7 @@ lina_consecutive = function(solvertraj, by_what, which){
     batch_ls = list.append(batch_ls,
                            sum = sum)
   }
-  print(batch_ls)
-  
+
   resls = list()
   for(i in 1:length(batch_ls)){
     res = list()
@@ -275,7 +299,7 @@ lina_consecutive = function(solvertraj, by_what, which){
   for(i in 1:length(resls)){
     current_ls = resls[i] %>% unlist(.)
     for(j in 1:length(current_ls)){
-      print(current_ls[j] %>% unlist(.) %>% as.numeric(.))
+      #print(current_ls[j] %>% unlist(.) %>% as.numeric(.))
       tmp_resls[i, j] <- current_ls[j] %>% unlist(.) %>% as.numeric(.)
     }
   }
