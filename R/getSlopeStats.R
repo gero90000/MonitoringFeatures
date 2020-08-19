@@ -267,7 +267,7 @@ lina_consecutive = function(solvertraj, by_what, which){
     resls[[i]] = res
   }
 
-  # TODO: append makeStats() statistics
+  # derive summary statistics to return object abozt gret, lt, and slopes
   tmp_resls <- data.frame(matrix(ncol = 3, nrow = 0))
   x <- c("gret", "lt", "slope")
   colnames(tmp_resls) <- x
