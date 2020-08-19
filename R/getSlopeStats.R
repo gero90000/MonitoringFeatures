@@ -129,45 +129,131 @@ getSlopeDirectionStats = function(solver_traj){
 #' @export
 #'
 #' @examples
-linear_slope_analyzer = function(solvertraj){
+lina_default = function(solvertraj, which){
   resls = list()
-  res = list()
+  #res = list()
   
   f = function(x, m ,b){
     y = (m * x) + b
     return(y)
   }
   
-  for(i in 1:9){
+  if(which %in% c("incumbant", "average.fitness")){
+    for(i in 1:9){ 
+      res = list()
+      x_rel = switch(i,
+                     0.1,
+                     0.2,
+                     0.3,
+                     0.4,
+                     0.5,
+                     0.6,
+                     0.7,
+                     0.8,
+                     0.9
+      ) 
+      x_abs = (solvertraj[length(solvertraj[, "iter"]) ,"iter"] * x_rel) %>% round(., 0L)
+      
+      x1 = 0L
+      x2 = x_abs
+      y1 = solvertraj[0L + 1L, which] # +1 because we really want to go until this iteration
+      y2 = solvertraj[x2 + 1L, which] # +1 because we really want to go until this iteration
+      
+      b = solvertraj[0L + 1L, which]
+      m = (y2-y1) / (x2-x1)
+      
+      gret = 0L
+      lt = 0L
+      for(j in 0:x2){
+        tmp = f(j, m, b)
+        print(round(tmp, 3))
+        print(round(solvertraj[j+1L, which], 3L))
+        print("...............")
+ 
+        if(round(tmp, 3) <= round(solvertraj[j+1L, which], 3L)){  # +1 needed since index != iteration
+          gret = gret + 1L
+          print("yes")
+        } 
+        else 
+        {
+          lt = lt + 1L
+        }
+      }
+      res = list.append(res, 
+                        gret = gret,
+                        lt = lt)
+      resls[[i]] = res
+    }
+  }
+  else 
+  {
+    message("Warning: please specify correct trajectories.")
+  }
+  return(resls)
+}
+
+#' Title
+#'
+#' @param solvertraj 
+#' @param by_what 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+lina_consecutive = function(solvertraj, by_what, which){
+  f = function(x, m ,b){
+    y = (m * x) + b
+    return(y)
+  }
+  
+  by_what = by_what # 4 == 1/4
+  
+  iter_amnt = solvertraj[length(solvertraj$iter), "iter"]
+  iter_last = iter_amnt
+  batch = (iter_amnt / by_what) %>% base::ceiling(.)
+  
+  sum = 0L
+  batch_ls = list()
+  while(sum < iter_last){
+    
+    if((sum + batch) >= iter_last){
+      batch_ls = list.append(batch_ls,
+                             sum = iter_last)
+      break
+    } 
+    sum = sum + batch
+    batch_ls = list.append(batch_ls,
+                           sum = sum)
+  }
+  
+  resls = list()
+  for(i in 1:length(batch_ls)){
     res = list()
-    x_rel = switch(i,
-                   0.1,
-                   0.2,
-                   0.3,
-                   0.4,
-                   0.5,
-                   0.6,
-                   0.7,
-                   0.8,
-                   0.9
-    ) 
-    x_abs = (solvertraj[length(solvertraj[, "iter"]) ,"iter"] * x_rel) %>% round(., 0L)
     
-    x1 = 0L
-    x2 = x_abs
-    y1 = solvertraj[1, "incumbant"]
-    y2 = solvertraj[x2, "incumbant"]
+    if(i == 1){
+      x1 = 0L
+    } else {
+      x1 = batch_ls[i-1L] %>% unlist(.) %>% as.numeric(.)
+    }
+    x2 = batch_ls[i] %>% unlist(.) %>% as.numeric(.)
+    y1 = solvertraj[x1 + 1L, which]         # +1 because we really want to go until this iteration
+    y2 = solvertraj[x2 + 1L, which]         # +1 because we really want to go until this iteration
     
-    b = solvertraj[1, "incumbant"]
+    b = y1 #solvertraj[x1 + 1L, which]
     m = (y2-y1) / (x2-x1)
     
     gret = 0L
     lt = 0L
-    for(j in 1:x2){
-      tmp = f(j, m, b)
-      if(round(tmp, 3) <= round(res_eax$trajectory[j, "incumbant"], 3)){
+    for(j in x1:x2){
+      #rescaling [0, batch] necessary, as natural 0 point is lost otherwise (b must be adapted)
+      j_rescaled = 0L + (((j - x1)*(batch - 0L)) / (x2 - x1))
+      tmp = f(j_rescaled, m, b)
+      if(round(tmp, 3) <= round(solvertraj[j+1L, which], 3L)){  # +1 needed since index != iteration
         gret = gret + 1L
-      } else {
+      } 
+      else 
+      {
         lt = lt + 1L
       }
     }
@@ -178,6 +264,8 @@ linear_slope_analyzer = function(solvertraj){
   }
   return(resls)
 }
+
+
 
 
 
