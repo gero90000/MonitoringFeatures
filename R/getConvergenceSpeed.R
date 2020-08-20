@@ -265,13 +265,10 @@ getConvSpeed_3 = function(solvertraj){
     y_type = unlist(ls[i]) %>% as.character(.)
     y1 = (solvertraj %>% .[1, y_type]) %>% normalize_y(., solvertraj, y_type)
     y2 = (solvertraj %>% .[length(.$iter), y_type]) %>% normalize_y(., solvertraj, y_type)
-    print(y1)
-    print(y2)
 
     # use logarithm to shrink the x range adequately, since y value is normalized
     x1 = 0L
     x2 = (solvertraj %>% .[length(.$iter), "iter"]) #%>% log10(.)
-    print(x2)
     
     m = (y2-y1) / (x2-x1)
     res[y_type] = m
