@@ -35,9 +35,12 @@ solvertraj_len = function(solvertraj, which_one){
   }
   len_sum_ls = diff(len_sum_ls) #((diff(len_sum_ls) - 1) * 1000)
   len_stats = makeStats("len_traj", len_sum_ls, stat_flag = T)
+
+  actual_len = len_sum - (length(solvertraj$iter) - 1L) # amnt iterations 
   
   resls = list.append(resls,
                       len_solvertraj = len_sum,
+                      actual_len = actual_len,
                       len_stats = len_stats)
   return(resls)
 }
