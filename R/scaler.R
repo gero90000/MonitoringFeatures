@@ -33,7 +33,7 @@ scalerOwn.scale_multi <- function(solvertraj, ...){
     })
     resls[[i]] = tmp
   }
-  #attr(solvertraj,'MIN_MAX_scaled') <<- TRUE
+  #attr(solvertraj,'MIN_MAX_scaled') <- TRUE
   return(resls)
 } 
 
