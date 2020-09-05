@@ -32,6 +32,11 @@ getVioPlat = function(solver_traj, VG_stats, Plat_start_stats, Plat_stats){
     vg = vg[which(vg$V1 >= VG_stats$vg_stats$vg_threshold), ]
     # only generated here and returned for plotting purpose 
     plat_pos_avg = Plat_start_stats$plat_start$plats_positions
+
+
+    # very unfortunate behavior (as we implictly assumed that real trajs are always plat == T, this is not the case whe
+    #  we cut down the times as done in zzzzz_EXP_dataloader.R)
+    # --> do not change here but in dataloader code
     plateaus = Plat_start_stats$data[which(Plat_start_stats$data$V1 > 1), ]
     plateaus = res_eax$trajectory[which(res_eax$trajectory$incumbant %in% 
                                         plateaus$incumbant), c("iter", "incumbant")]

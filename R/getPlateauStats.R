@@ -265,7 +265,7 @@ getPlateauStartStats = function(solver_traj, interval, successRatio){
     interval_points = NA
     interval_contains = NA
     counter_ls = list()
-    tmp = ls()
+    tmp = list()
   }
   resls = list.append(resls, 
                       plat_start = plat_start,

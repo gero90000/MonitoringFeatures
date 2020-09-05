@@ -291,13 +291,13 @@ imputeTimes = function(solver_traj){
 #' @export
 #'
 #' @examples
-imputeLastPlateau = function(solver_traj){
+imputeLastPlateau = function(solver_traj, cutoff.time){
 
   if(attr(solver_traj,'plateaunized_called') == T & 
      attr(solver_traj,'times_imputed_called') == T){
     
     iter_time_avg = solver_traj[length(solver_traj$iter), "time.passed"] / (length(solver_traj$iter)-1L) # -1 ???
-    res_eax_cutoff_time = 5L
+    res_eax_cutoff_time = cutoff.time #5L
     timer_remainder = res_eax_cutoff_time - solver_traj[length(solver_traj$iter), "time.passed"]
     amnt_iter = (timer_remainder / iter_time_avg) %>% round(., 0)
 
@@ -330,6 +330,29 @@ imputeLastPlateau = function(solver_traj){
              are called before calling imputeLastPlateau() on that instance!")
   }
 }
+
+#' Plateau Checker (only needed for dataloader)
+#'
+#' @param solvertraj 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+checkPlat = function(solvertraj){
+  plat_FLAG = FALSE
+  for(i in 1:length(solvertraj$iter)){
+  
+    if(i == length(solvertraj$iter)){
+      break
+    }
+    if(solvertraj[i, "incumbant"] == solvertraj[i+1, "incumbant"]){
+      plat_FLAG = TRUE
+    }
+  }
+  return(plat_FLAG)
+}
+
 
 # dependcy to getFeatureSet (salesperson)
 #' Title

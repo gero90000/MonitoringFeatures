@@ -4,7 +4,7 @@
 \alias{imputeLastPlateau}
 \title{Title}
 \usage{
-imputeLastPlateau(solver_traj)
+imputeLastPlateau(solver_traj, cutoff.time)
 }
 \arguments{
 \item{solver_traj}{}
