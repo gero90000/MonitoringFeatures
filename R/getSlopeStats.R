@@ -153,6 +153,12 @@ lina_default = function(solvertraj, which){
                      0.9
       ) 
       x_abs = (solvertraj[length(solvertraj[, "iter"]) ,"iter"] * x_rel) %>% round(., 0L)
+
+      # ... so we can avoid floor(.)
+      # and we do not have an index excession in line: 179
+      if(x_abs == length(solvertraj$iter)){
+        x_abs = length(solvertraj$iter) - 1L  #before: x_abs
+      }
       
       x1 = 0L
       x2 = x_abs
@@ -164,6 +170,16 @@ lina_default = function(solvertraj, which){
       
       gret = 0L
       lt = 0L
+      
+      if(is.na(m)){
+        res = list.append(res, 
+                          gret = gret,
+                          lt = lt,
+                          slope = 0)
+        resls[[i]] = res
+        next
+      }
+
       for(j in x1:x2){
         tmp = f(j, m, b)
         #print(round(tmp, 3))

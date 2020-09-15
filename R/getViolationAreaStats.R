@@ -27,6 +27,7 @@ getVioPlat = function(solver_traj, VG_stats, Plat_start_stats, Plat_stats){
 
   if(attr(solver_traj,'plateaunized') == T & 
      attr(solver_traj,'vertical_gaps') == T){
+
     vg = VG_stats$improvements
     vg = as.data.frame(cbind(vg$improvement, seq(1:length(VG_stats$improvements$improvement))))
     vg = vg[which(vg$V1 >= VG_stats$vg_stats$vg_threshold), ]
