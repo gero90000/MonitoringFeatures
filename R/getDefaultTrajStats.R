@@ -102,6 +102,7 @@ getDefaultStats = function(solvertraj, solvertraj_copy = "", eff_real_stat = FAL
     if(real_iter_cleaned == 0){
       real_effective_same_length = TRUE
       avg_iter_duration_real_cleaned = avg_iter_duration_real
+      real_iter_cleaned = real_iter
 
       eff_real_iter_relation = 1L
 
