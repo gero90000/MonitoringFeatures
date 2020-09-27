@@ -81,18 +81,31 @@ getKneeRatio = function(solver_traj, VG_stats, plat_start_stats){
         }
 
       knee_start_iter = knee_start_ls
-
       knee_strictness = 10L
+
+      #print(res_eax_traj_CACHE)
+      #print(knee_start_iter)
+
+      #print(paste("solver: ", length(solver_traj$iter)))
+      #print(paste("cache: ", length(res_eax_traj_CACHE$Knee_start_end)))
+
       for(i in 1:length(knee_start_iter)){
+
         stop = FALSE
         start = knee_start_iter[i]
         end = knee_start_iter[i] + knee_strictness
         
-        if(end > length(solver_traj$iter)){ # catch indexing error
+        if(end >= length(solver_traj$iter)){ # catch indexing error
           end = length(solver_traj$iter) - 1 #-1 because j runs in accordance to iterations not indexes
         }
 
+        #print("---------------------------------")
+        #print(start)
+        #print(end)
+        #print("*********************************")
+
         j = start
+        
         while(j <= end){
           if(res_eax_traj_CACHE[j + 1L, "Knee_start_end"] == "End"){ # +1 needed since now indexing
             knee_counter = knee_counter + 1L

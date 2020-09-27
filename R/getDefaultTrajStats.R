@@ -75,13 +75,11 @@ getDefaultStats = function(solvertraj, solvertraj_copy = "", eff_real_stat = FAL
     
     time_diff_stat_ls_real = makeStats("time_diff_real", diff(solvertraj_copy$time.passed))
 
-
     real_effective_same_length = FALSE #(to be checked later)
     real_iter = solvertraj_copy %>% .[length(.$iter), "iter"] 
     real_iter_cleaned = real_iter - effective_iter
-    real_runtime = (solvertraj_copy %>% .[length(.$iter), "time.passed"]) %>% round(., 0L)
+    real_runtime = (solvertraj_copy %>% .[length(.$iter), "time.passed"]) #%>% round(., 0L)
     real_runtime_cleaned = real_runtime - effective_runtime
-
 
     #eff-real relation
     #sicherheitshalber
@@ -91,19 +89,16 @@ getDefaultStats = function(solvertraj, solvertraj_copy = "", eff_real_stat = FAL
       eff_real_time_relation = (effective_runtime / real_runtime_cleaned)
     }
     
-
     effective_partion_iter = effective_iter / real_iter
     effective_partion_time = effective_runtime / real_runtime 
-
     avg_iter_duration_real = real_runtime / real_iter
-
 
     # +++ new +++ as we get "inf" values for equally long real and eff trajectories
     if(real_iter_cleaned == 0){
+
       real_effective_same_length = TRUE
       avg_iter_duration_real_cleaned = avg_iter_duration_real
       real_iter_cleaned = real_iter
-
       eff_real_iter_relation = 1L
 
     } else { # stupid, missed the ELSE !!!!!
