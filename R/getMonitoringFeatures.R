@@ -15,13 +15,13 @@ getMonitoringFeatures = function(instance_ls, cutoff.time, scaling){
   big_res_ls = list() 
   cutoff.time = cutoff.time
   names_ls = names(instance_ls)
-  
+
   for(i in 1:length(instance_ls)){ 
-    # answer we need this k to have a proper grouping,
-    # that is (1 eff,2 real), (3,4) etc.
+    # we need this k to have a proper grouping,
+    # that is (1 eff,2 real), (3,4), etc. for every %-batch resp.
     k = 0L
     name = names_ls[i]
-    for(j in 1:2){  #length(instance_ls[[i]])# 150 <=> LB
+    for(j in 1:length(instance_ls[[i]])){  
       #========================================================================================
       # to allow a integer based group assignment on premise  
       #========================================================================================
@@ -37,7 +37,6 @@ getMonitoringFeatures = function(instance_ls, cutoff.time, scaling){
                      8900, 
                      9200) 
       group = j + k + adder
-      
       # needed for proper grouping, cf. above.
       k = k + 1L
       print(name)
@@ -65,8 +64,8 @@ getMonitoringFeatures = function(instance_ls, cutoff.time, scaling){
       #========================================================================================
       if(scaling == TRUE){
         saver = min_max_memory(res_eax$trajectory, "scale_multi")
-        tmp_min_inc = saver$getMin() #get("min_inc", test$getEnv())
-        tmp_max_inc = saver$getMax() #get("max_inc", test$getEnv())
+        tmp_min_inc = saver$getMin() 
+        tmp_max_inc = saver$getMax() 
         
         class(res_eax$trajectory) <- append(class(res_eax$trajectory), "scale_multi")
         class(res_eax_copy$trajectory) <- append(class(res_eax_copy$trajectory), "scale_multi")
@@ -120,6 +119,7 @@ getMonitoringFeatures = function(instance_ls, cutoff.time, scaling){
         res_eax$trajectory$ID = NA 
         # e.g.: "/Users/bjornbreilmann/Desktop/local-Jacob/instances_Jakob/netgen1000/1000-5-9.tsp" 
         id_long = instance_ls[[i]][j]  
+        # TODO: make this dynamic
         id = sub("/Users/bjornbreilmann/Desktop/local-Jacob/instances_Jakob/", "", id_long)
         res_eax$trajectory$ID = id
         
@@ -168,7 +168,6 @@ getMonitoringFeatures = function(instance_ls, cutoff.time, scaling){
           # --> these will be passed as arguments to the functions
           # --> from now apply monitoring functions on this object
           #========================================================================================
-          
           # effective
           threshold_eff = (res_eax$trajectory[length(res_eax$trajectory$iter), "iter"] * b) %>% ceiling(.)
           solvertraj_eff = res_eax$trajectory[which(res_eax$trajectory$iter <= threshold_eff), ]
@@ -2405,11 +2404,10 @@ getMonitoringFeatures = function(instance_ls, cutoff.time, scaling){
             plottable_df_copy$KneeAmnt = 0L
             plottable_df_copy$KneeRatio = 0L
           }
-          
           print(paste("could derive features in: ", l))
           
           #========================================================================================
-          # capture results and append
+          # capture results 
           #======================================================================================== 
           
           plottable_df_all_TMP = rbind(plottable_df, plottable_df_copy)
@@ -2420,9 +2418,10 @@ getMonitoringFeatures = function(instance_ls, cutoff.time, scaling){
             plottable_df_all = rbind(plottable_df_all, plottable_df_all_TMP)
           }
         }
-        # bis hier geht b-loop
-        #name appropriately 
-        #assign(paste("feats_", 1, sep = ""), res_eax$trajectory)
+
+        #========================================================================================
+        # append results
+        #======================================================================================== 
         if(i == 1 & j == 1){
           big_res_ls[[paste("feats_", l, sep = "")]] <- plottable_df_all
         } else {
