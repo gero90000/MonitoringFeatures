@@ -39,7 +39,7 @@ getVioPlat = function(solver_traj, VG_stats, Plat_start_stats, Plat_stats){
     #  we cut down the times as done in zzzzz_EXP_dataloader.R)
     # --> do not change here but in dataloader code
     plateaus = Plat_start_stats$data[which(Plat_start_stats$data$V1 > 1), ]
-    plateaus = res_eax$trajectory[which(res_eax$trajectory$incumbant %in% 
+    plateaus = solver_traj[which(solver_traj$incumbant %in% 
                                         plateaus$incumbant), c("iter", "incumbant")]
     vg_last = vg[length(vg$V1), "V2"]
     
