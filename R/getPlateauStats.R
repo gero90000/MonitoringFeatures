@@ -1,10 +1,4 @@
-# TODO:
-# put roxygen2 comments here
-# @author: Jacob, Pascal, Bjoern 
-# @Feature_2.1: "SUCCESS RATIO"
-# @description: 
 #  Ratio of successful iterations and total iterations from [0, 1]
-
 # identify plateaus in df (the first redundant row is a plateau and increment counter ++)
 # helper for @calcSuccessRatio()
 # unsuccesful runs == 1 step length in Plateau 

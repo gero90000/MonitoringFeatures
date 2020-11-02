@@ -43,7 +43,7 @@ getIncLB_area = function(solver_traj, lb, ub){
     area = 0L
     #area_sum = 0L
     for (i in 2:length(solver_traj$iter)) {
-      w = 1L #res_eax$trajectory[i, "iter"] - res_eax$trajectory[i - 1, "iter"]
+      w = 1L #solver_traj[i, "iter"] - solver_traj[i - 1, "iter"]
       h = solver_traj[i - 1L, ub] - lb # "incumbant"
       area = w * h
       area_sum = area_sum + area

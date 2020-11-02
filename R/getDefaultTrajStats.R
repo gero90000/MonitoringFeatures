@@ -1,13 +1,3 @@
-# TODO
-# put roxygen comment here
-# @author: Jacob, Pascal, Bjoern 
-# @IDEA_ID_0.1: "GENERAL OVERVIEW STATISTICS OF EAX PRE SOLVING RUN"
-# @description: 
-#  returns general and feault staistics about 
-#  cutoff-time-defined pre-solving run of EAX (+restart).
-#  ideally used and featured with ideas in the future. 
-#  (cf. commented ideas in code below, for example)
-
 # can be used both for default stats for orig and copy (i.e., effective and real)
 # but also for specialized effective stats when called like 
 # getDefaultStats(res_eax$trajectory, res_eax_copy$trajectory, eff_real_stat = TRUE)

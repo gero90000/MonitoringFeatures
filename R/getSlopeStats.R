@@ -1,7 +1,3 @@
-# TODO:
-# put roxygen2 comments here
-# @author: Jacob, Pascal, Bjoern
-# @Feature_5: "SLOPE STATISTCS"
 # @description: 
 #   For each pair of improvements pi = (ti,fi) and pj = (tj,fj) 
 #   with i < j compute the slope of the linear function through pi and pj. 

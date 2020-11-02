@@ -1,10 +1,3 @@
-
-# @author:Bjoern
-# @Feature_8: "QUADRATIC MODEL FIT"
-# @description: 
-#   Fit quadratic model to (ti, fi), 
-#   i = 1,... , n. Have a look at model coefficients etc.
-
 #' Title
 #'
 #' @param solver_traj 
