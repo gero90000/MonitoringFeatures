@@ -8,10 +8,11 @@
 #' @export
 #'
 #' @examples
-getMonitoringFeatures = function(instance_ls, cutoff.time, scaling){
+getMonitoringFeatures = function(instance_ls, cutoff.time, scaling, seed){
   #========================================================================================
   # set local variables
   #========================================================================================
+  base::set.seed(seed)
   big_res_ls = list() 
   cutoff.time = cutoff.time
   names_ls = names(instance_ls)
