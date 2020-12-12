@@ -307,7 +307,17 @@ generateIntervalplot = function(data, incumbant = "incumbant", V1 = "V1") {
       geom_vline(xintercept = as.double(data$data[1, "incumbant"])) +
       annotate("text", x = x , y = 1.89, label = "Plateau Boarder", color = "tomato", size = 3) +
       ylab("Plateau Length (-1)") + 
-      xlab("fitness(Incumbant)")
+      xlab("fitness(Incumbant)") +
+      theme(
+        #axis.text.x = element_text(angle = 45, size=5),
+        legend.title = element_blank(),
+        panel.background = element_rect(fill = "white", colour = "white",
+                                        size = 2, linetype = "solid"),
+        panel.grid.major = element_line(size = 0.15, linetype = 'solid',
+                                        colour = "grey"), 
+        panel.grid.minor = element_line(size = 0.15, linetype = 'solid',
+                                        colour = "white")
+    )
     return(plot)
   }
 }
@@ -338,7 +348,17 @@ makePlateau_plot = function(test_ls, solver_traj){
     geom_hline(yintercept = hlines, linetype = "dotted", color = "black", alpha = 0.98) +
     geom_hline(yintercept = test_ls$interval_points, linetype = "dotted", color = "black", alpha = 0.98) +
     ggtitle("Incumbent Trajectory") +
-    geom_point(data = C, mapping = aes(x = x, y = Group.1), pch = 10, size = 5.5, color = "red", alpha = 1)
+    geom_point(data = C, mapping = aes(x = x, y = Group.1), pch = 10, size = 5.5, color = "red", alpha = 1) +
+    theme(
+      #axis.text.x = element_text(angle = 45, size=5),
+      legend.title = element_blank(),
+      panel.background = element_rect(fill = "white", colour = "white",
+                                      size = 2, linetype = "solid"),
+      panel.grid.major = element_line(size = 0.15, linetype = 'solid',
+                                      colour = "grey"), 
+      panel.grid.minor = element_line(size = 0.15, linetype = 'solid',
+                                      colour = "white")
+  )
 }
 
 

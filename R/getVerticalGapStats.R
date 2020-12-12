@@ -120,6 +120,7 @@ getVGStartStats = function(solver_traj, VG_stats, interval, increasing){
     
     amnt_iter = length(solver_traj$iter) - 1L
     span_incumbent = sum(res_eax_traj_CACHE$improvement)
+    # TODO: catch error when interval paramter is exceeded 
     # e.g., interval = 3 // up to first 30%, i.e., 10%,...,30%
     if(increasing == T){
       start = 1L
@@ -159,7 +160,6 @@ getVGStartStats = function(solver_traj, VG_stats, interval, increasing){
       ratio_first_perc = sum(res_eax_traj_CACHE[1:first_X_perc_traj, "improvement"]) / span_incumbent
       ratio_first_perc_ls[i] = ratio_first_perc
       
-      # idea_2
       # count drops/VGs based on 75% and 90% quantile in the first part of the run 
       improvements_perc = res_eax_traj_CACHE[1:first_X_perc_traj, "improvement"]
       amnt_VG_perc= improvements_perc[which(improvements_perc >= min(VG_stats$vertical_gaps_data))] %>% length(.)
@@ -171,10 +171,10 @@ getVGStartStats = function(solver_traj, VG_stats, interval, increasing){
 
     firstVG_X_abs = res_eax_traj_CACHE[which(res_eax_traj_CACHE$improvement == 
                                        VG_stats$vertical_gaps_data$vg_df[1]), "iter"]
-    firstVG_X_abs = firstVG_X_abs[length(firstVG_X_abs)] # needed sinc ethere can be duplicates so we take the real first VG
+    firstVG_X_abs = firstVG_X_abs[length(firstVG_X_abs)] # needed since there can be duplicates so we take the real first VG
     lastVG_X_abs = res_eax_traj_CACHE[which(res_eax_traj_CACHE$improvement == 
                                       VG_stats$vertical_gaps_data$vg_df[length(VG_stats$vertical_gaps_data$vg_df)]), "iter"]
-    lastVG_X_abs = lastVG_X_abs[length(lastVG_X_abs)] # needed sinc ethere can be duplicates so we take the real last VG
+    lastVG_X_abs = lastVG_X_abs[length(lastVG_X_abs)] # needed since there can be duplicates so we take the real last VG
     firstVG_X_rel = firstVG_X_abs / length(solver_traj$iter)
     lastVG_X_rel = lastVG_X_abs / length(solver_traj$iter)
 
@@ -291,5 +291,15 @@ makeVG_plot = function(VGstats, solver_traj){
                  y = solver_traj[helper[length(helper$V2), "V2"]+1L, "incumbant"], 
                  xend = length(solver_traj$iter)-1, 
                  yend = solver_traj[length(solver_traj$iter), "incumbant"], 
-                 linetype = "solid", color = "red")    
+                 linetype = "solid", color = "red") +
+    theme(
+        #axis.text.x = element_text(angle = 45, size=5),
+        legend.title = element_blank(),
+        panel.background = element_rect(fill = "white", colour = "white",
+                                        size = 2, linetype = "solid"),
+        panel.grid.major = element_line(size = 0.15, linetype = 'solid',
+                                        colour = "grey"), 
+        panel.grid.minor = element_line(size = 0.15, linetype = 'solid',
+                                        colour = "white")
+    ) 
 }

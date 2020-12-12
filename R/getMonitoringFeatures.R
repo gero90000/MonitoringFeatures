@@ -1277,7 +1277,8 @@ getMonitoringFeatures = function(instance_ls, cutoff.time, scaling, seed){
           #========================================================================================
           # 16) quadratic model fit 
           #========================================================================================
-          qmcoeff = getQuadraticModelCoeff(solvertraj_eff, TRUE)
+          #qmcoeff = getQuadraticModelCoeff(solvertraj_eff, TRUE)
+          qmcoeff = getQuadraticModelCoeff(res_eax$trajectory, whichCol = "average.fitness" ,TRUE)
           
           plottable_df$rsquared= qmcoeff$summ_coeff_poly$r.squared
           plottable_df$rsquared_adj = qmcoeff$summ_coeff_poly$adj.r.squared
@@ -2384,7 +2385,8 @@ getMonitoringFeatures = function(instance_ls, cutoff.time, scaling, seed){
           #========================================================================================
           # 15) quadratic model fit REAL
           #========================================================================================
-          qmcoeff_copy = getQuadraticModelCoeff(solvertraj_real, TRUE)
+          #qmcoeff_copy = getQuadraticModelCoeff(solvertraj_real, TRUE)
+          qmcoeff_copy = getQuadraticModelCoeff(res_eax_copy$trajectory, whichCol = "average.fitness", TRUE)
           
           plottable_df_copy$rsquared = qmcoeff_copy$summ_coeff_poly$r.squared
           plottable_df_copy$rsquared_adj = qmcoeff_copy$summ_coeff_poly$adj.r.squared

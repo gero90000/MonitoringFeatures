@@ -7,15 +7,15 @@
 #' @export
 #'
 #' @examples
-getQuadraticModelCoeff = function(solver_traj, plot = FALSE){
+getQuadraticModelCoeff = function(solver_traj, whichCol, plot = FALSE){
   resls = list()
   p = NA
 
-  model_linear = lm(solver_traj$average.fitness ~ solver_traj$iter)
+  model_linear = lm(solver_traj[, whichCol] ~ solver_traj$iter) #solver_traj$average.fitness
   summ_coeff_linear = summary(model_linear)
   model_poly = tryCatch(
     {
-      lm(solver_traj$average.fitness ~ poly(solver_traj$iter, 2))
+      lm(solver_traj[, whichCol] ~ poly(solver_traj$iter, 2)) #solver_traj$average.fitness
     },
     error=function(cond) {
       message(cond)
